@@ -3,6 +3,8 @@ import { NavBar } from './shared/navbar/NavBar'
 import HeroSection from './components/heroSection/heroSection'
 import Hero from './components/heroSection/hero'
 import ServicesSection from './components/package/serviceCard/ServiceCard'
+import Location_Service from './components/package/location/Location'
+import HomePageAboutUs from './components/aboutus/AboutUs'
 
 const Home = () => {
   return (
@@ -16,6 +18,12 @@ const Home = () => {
       </div>
       <div>
         <ServicesSection/>
+      </div>
+      <div>
+        <Location_Service/>
+      </div>
+      <div>
+        <HomePageAboutUs/>
       </div>
     </div>
   )
