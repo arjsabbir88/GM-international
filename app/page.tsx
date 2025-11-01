@@ -5,6 +5,8 @@ import Hero from './components/heroSection/hero'
 import ServicesSection from './components/package/serviceCard/ServiceCard'
 import Location_Service from './components/package/location/Location'
 import HomePageAboutUs from './components/aboutus/AboutUs'
+import { HFAQ } from './components/HFAQ/HeroFAQ'
+import HSupport from './components/HSupport/HSupport'
 
 const Home = () => {
   return (
@@ -24,6 +26,12 @@ const Home = () => {
       </div>
       <div>
         <HomePageAboutUs/>
+      </div>
+      <div>
+        <HFAQ/>
+      </div>
+      <div>
+        <HSupport/>
       </div>
     </div>
   )
