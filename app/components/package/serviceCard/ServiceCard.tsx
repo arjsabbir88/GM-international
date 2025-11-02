@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React from 'react';
 
 interface ServiceCardProps {
@@ -6,10 +7,12 @@ interface ServiceCardProps {
   description: string;
   color: string;
   titleColor: string;    // added titleColor here
+  page_link: string;
 }
 
-const ServiceCard: React.FC<ServiceCardProps> = ({ iconUrl, title, description, color, titleColor }) => {
+const ServiceCard: React.FC<ServiceCardProps> = ({ iconUrl, title, description, titleColor,page_link }) => {
   return (
+    <Link href={page_link}>
     <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 p-6 flex flex-col items-center text-center group animate-fadeInUp">
       <div>
         <img src={iconUrl} alt={title} className="w-8 h-8" />
@@ -21,6 +24,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ iconUrl, title, description, 
         {description}
       </p>
     </div>
+    </Link>
   );
 };
 
@@ -31,42 +35,48 @@ const ServicesSection: React.FC = () => {
       title: "Student",
       description: "Jorem ipsum dolor sit amet, cons.Jorem ipsum dolor sit.",
       color: "bg-gray-100",
-      titleColor: "text-blue-700"
+      titleColor: "text-blue-700",
+      page_link: "/student-home-page"
     },
     {
       iconUrl: "https://i.postimg.cc/TPQR97xj/streamline-ultimate-favorite-medical-bold.png",
       title: "Medical",
       description: "Jorem ipsum dolor sit amet, cons.Jorem ipsum dolor sit.",
       color: "bg-red-500",
-      titleColor: "text-red-500"
+      titleColor: "text-red-500",
+      page_link: "/medical-home-page"
     },
     {
       iconUrl: "https://i.postimg.cc/bYZtZb0B/majesticons-airplane.png",
       title: "Tourism",
       description: "Jorem ipsum dolor sit amet, cons.Jorem ipsum dolor sit.",
       color: "bg-sky-400",
-      titleColor: "text-sky-300"
+      titleColor: "text-sky-300",
+      page_link: "/tourist-home-page"
     },
     {
       iconUrl: "https://i.postimg.cc/5tPX0N6m/solar-pie-chart-3-bold.png",
       title: "Business",
       description: "Jorem ipsum dolor sit amet, cons.Jorem ipsum dolor sit.",
       color: "bg-gray-800",
-      titleColor: "text-black"
+      titleColor: "text-black",
+      page_link: "/business-home-page"
     },
     {
       iconUrl: "https://i.postimg.cc/L8253ZfF/9023992-student-fill-icon-1.png",
       title: "International Student",
       description: "Jorem ipsum dolor sit amet, cons.Jorem ipsum dolor sit.",
       color: "bg-red-500",
-      titleColor: "text-red-500"
+      titleColor: "text-red-500",
+      page_link: "/"
     },
     {
       iconUrl: "https://i.postimg.cc/sDRg3ZTr/3383446-airport-departure-luggage-passenger-tourist-icon-1.png",
       title: "International Tourist",
       description: "Jorem ipsum dolor sit amet, cons.Jorem ipsum dolor sit.",
       color: "bg-gray-700",
-      titleColor: "text-blue-700"
+      titleColor: "text-blue-700",
+      page_link: "/"
     }
   ];
 

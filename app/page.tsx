@@ -11,9 +11,7 @@ import HSupport from './components/HSupport/HSupport'
 const Home = () => {
   return (
     <div>
-      <div className='sticky top-0 z-50 bg-white'>
-        <NavBar/>
-      </div>
+      
       <div>
         {/* <HeroSection/> */}
         <Hero/>
