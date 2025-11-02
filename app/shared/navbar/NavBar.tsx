@@ -57,14 +57,22 @@ export function NavBar() {
   // const isMobile = useIsMobile()
 
   return (
-    <NavigationMenu viewport={false} className="max-w-11/12 mx-auto flex justify-around items-center py-3">
+    <NavigationMenu
+      viewport={false}
+      className="max-w-11/12 mx-auto flex justify-around items-center py-3"
+    >
       <NavigationMenuList>
         <NavigationMenuItem>
-          <img src="https://i.postimg.cc/WbV55LZS/Group-2.png" alt="company_logo" className="w-10 h-10" />
+          <Link href="/">
+            <img
+              src="https://i.postimg.cc/WbV55LZS/Group-2.png"
+              alt="company_logo"
+              className="w-10 h-10"
+            />
+          </Link>
         </NavigationMenuItem>
       </NavigationMenuList>
       <NavigationMenuList className="flex-wrap">
-
         {/* home section */}
         <NavigationMenuItem>
           <NavigationMenuLink className={navigationMenuTriggerStyle()}>
@@ -133,7 +141,6 @@ export function NavBar() {
           </NavigationMenuContent>
         </NavigationMenuItem>
 
-
         {/* about us */}
         <NavigationMenuItem className="hidden md:block">
           <NavigationMenuTrigger>About Us</NavigationMenuTrigger>
@@ -167,7 +174,11 @@ export function NavBar() {
       {/* btn section */}
       <NavigationMenuList>
         <NavigationMenuItem>
-          <img src="https://i.postimg.cc/WbV55LZS/Group-2.png" alt="company_logo" className="w-10 h-10" />
+          <img
+            src="https://i.postimg.cc/WbV55LZS/Group-2.png"
+            alt="company_logo"
+            className="w-10 h-10"
+          />
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>

@@ -121,3 +121,10 @@
     @apply bg-background text-foreground;
   }
 }
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: transparent;
+  color: inherit;
+}
