@@ -8,8 +8,15 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import DropDown from "./dropDown";
-import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions } from "@headlessui/react";
+import {
+  Combobox,
+  ComboboxButton,
+  ComboboxInput,
+  ComboboxOption,
+  ComboboxOptions,
+} from "@headlessui/react";
 import { ChevronDown } from "lucide-react";
+import SelectDropdown from "./selectDropDown";
 
 interface Universities {
   all: string[];
@@ -17,6 +24,18 @@ interface Universities {
   china: string[];
   malaysia: string[];
 }
+
+interface countryOption {
+  id: number;
+  name: string;
+}
+
+const countryOptions: countryOption[] = [
+  { id: 0, name: "All" },
+  { id: 1, name: "Australia" },
+  { id: 2, name: "China" },
+  { id: 3, name: "Malaysia" },
+];
 
 function MainModal() {
   const [formData, setFormData] = useState({
@@ -43,17 +62,38 @@ function MainModal() {
     china: [],
     malaysia: [],
   });
-  
+
   const { all: allUniversities, australia, china, malaysia } = universityList;
-  const [selected, setSelected] = useState<string[] | null>(allUniversities);
 
+  const [selectedCountry, setSelectedCountry] = useState<countryOption | null>(
+    countryOptions[0]
+  );
 
-  console.log(universityList)
+  const [selectedUniversity, setSelectedUniversity] = useState<string | null>(
+    "Select University"
+  );
+
+  const [filteredUniversities, setFilteredUniversities] = useState<string[]>(
+    allUniversities[0] ? allUniversities : []
+  );
+
+  useEffect(() => {
+    const countryMap: Record<string, string[]> = {
+      All: allUniversities,
+      Australia: australia,
+      China: china,
+      Malaysia: malaysia,
+    };
+
+    setFilteredUniversities(countryMap[selectedCountry?.name ?? "All"] || []);
+  }, [selectedCountry, allUniversities, australia, china, malaysia]);
+
+  // console.log(universityList);
 
   useEffect(() => {
     fetch("/api/universities")
       .then((res) => res.json())
-      .then((data) => console.log(data))
+      .then((data) => setUniversityList(data))
       .catch((err) => console.error(err));
   }, []);
 
@@ -68,6 +108,16 @@ function MainModal() {
     e.preventDefault();
     console.log("Form submitted:", formData);
   };
+
+  if (!filteredUniversities) {
+    return null;
+  }
+
+  if (!universityList) {
+    return "loading ......";
+  }
+
+  console.log(countryOptions, selectedCountry);
 
   return (
     <div className="mx-auto max-w-4xl overflow-auto bg-white/40">
@@ -84,77 +134,29 @@ function MainModal() {
 
             <div className="grid gap-6 grid-cols-3">
               {/* fist row */}
+
               {/* select country */}
               <div className="space-y-2">
-                <Label htmlFor="supportType" className="text-sm font-medium">
-                  Country
-                </Label>
-                <DropDown />
-                {/* <select
-                  id="supportType"
-                  name="supportType"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm hover:cursor-pointer"
-                >
-                  <option
-                    value="Select Option 1"
-                    className="hover:cursor-pointer"
-                  >
-                    All
-                  </option>
-                  <option value="option2" className="hover:cursor-pointer">
-                    Chaina
-                  </option>
-                  <option value="option3" className="hover:cursor-pointer">
-                    Australia
-                  </option>
-                  <option value="option3" className="hover:cursor-pointer">
-                    Malaysia
-                  </option>
-                </select> */}
+                {/* <DropDown /> */}
+                <div>
+                  <SelectDropdown
+                    label="Country"
+                    options={countryOptions}
+                    selected={selectedCountry}
+                    onChange={setSelectedCountry}
+                    displayKey="name"
+                  />
+                </div>
               </div>
 
               {/* select university */}
               <div className="space-y-2">
-                <Label
-                  htmlFor="subscriptionPeriod"
-                  className="text-sm font-medium"
-                >
-                  Univercity*
-                </Label>
-                <select
-                  id="supportType"
-                  name="supportType"
-                  value={formData.subscriptionPeriod}
-                  onChange={handleInputChange}
-                  className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm hover:cursor-pointer"
-                >
-                  <option
-                    value="Select Option 1"
-                    className="hover:cursor-pointer"
-                  >
-                    Select
-                  </option>
-                  <option value="option2" className="hover:cursor-pointer">
-                    Tsinghua university
-                  </option>
-                  <option value="option3" className="hover:cursor-pointer">
-                    Fudan Universty
-                  </option>
-                  <option value="option3" className="hover:cursor-pointer">
-                    Peking University
-                  </option>
-                  <option value="option3" className="hover:cursor-pointer">
-                    Universiti putra malaysia
-                  </option>
-                  <option value="option3" className="hover:cursor-pointer">
-                    University of malaya
-                  </option>
-                  <option value="option3" className="hover:cursor-pointer">
-                    UCSI University
-                  </option>
-                </select>
+                <SelectDropdown
+                  label="*University"
+                  options={filteredUniversities}
+                  selected={selectedUniversity}
+                  onChange={setSelectedUniversity}
+                />
               </div>
 
               {/* uploade package img */}
