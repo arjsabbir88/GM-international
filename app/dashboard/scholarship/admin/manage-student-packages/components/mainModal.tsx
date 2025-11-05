@@ -2,21 +2,13 @@
 
 import type React from "react";
 
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import DropDown from "./dropDown";
-import {
-  Combobox,
-  ComboboxButton,
-  ComboboxInput,
-  ComboboxOption,
-  ComboboxOptions,
-} from "@headlessui/react";
-import { ChevronDown } from "lucide-react";
 import SelectDropdown from "./selectDropDown";
+import { useForm, SubmitHandler } from "react-hook-form";
 
 interface Universities {
   all: string[];
@@ -28,6 +20,10 @@ interface Universities {
 interface countryOption {
   id: number;
   name: string;
+}
+
+interface ImgFormData {
+  secure_url?: string;
 }
 
 const countryOptions: countryOption[] = [
@@ -60,101 +56,197 @@ const studyLevel: string[] = [
   "School",
 ];
 
-const duration: string[] = ["Select Duration", "2", "3", "4", "6", "8"];
+const duration: string[] = [
+  "Select Duration",
+  "2 year",
+  "3 year",
+  "4 year",
+  "6 year",
+  "8 year",
+];
+
+const language: string[] = ["English", "Bangla", "Chinese", "Malaya"];
+
+const initialState = {
+  // form data
+  // formData: {
+  //   imgUrl: "",
+  //   packagePrice: "",
+  //   universityUrl: "",
+  //   deadlineDate: "",
+  //   startingDate: "",
+  //   tuitionFree: "",
+  //   sl_No: "",
+  //   packageDescription: "",
+  //   value: "",
+  // },
+  // selection data
+  selectedCountry: countryOptions[0],
+  selectedUniversity: "Select University",
+  filteredUniversities: [],
+  selectUniversitiesProgram: UniversitiesProgram[0],
+  selectStudyLevel: studyLevel[0],
+  selectDuration: duration[0],
+  universityList: { all: [], australia: [], china: [], malaysia: [] },
+};
+
+function reducer(state: any, action: any) {
+  switch (action.type) {
+    // case "SET_FORM":
+    //   return {
+    //     ...state,
+    //     formData: {
+    //       ...state.formData,
+    //       [action.payload.name]: action.payload.value,
+    //     },
+    //   };
+
+    case "SET_UNIVERSITIES":
+      return { ...state, universityList: action.payload };
+
+    case "SET_COUNTRY":
+      return {
+        ...state,
+        selectedCountry: action.payload,
+        filteredUniversities:
+          action.payload.name === "All"
+            ? state.universityList.all
+            : state.universityList[action.payload.name.toLowerCase()],
+        selectedUniversity: "Select University",
+      };
+
+    case "SET_UNIVERSITY":
+      return { ...state, selectedUniversity: action.payload };
+
+    case "SET_PROGRAM":
+      return { ...state, selectUniversitiesProgram: action.payload };
+
+    case "SET_STUDY_LEVEL":
+      return { ...state, selectStudyLevel: action.payload };
+
+    case "SET_DURATION":
+      return { ...state, selectDuration: action.payload };
+    case "SET_LANGUAGE":
+      return { ...state, selectLanguage: action.payload };
+    default:
+      return state;
+  }
+}
+
+type Inputs = {
+  imgURL: string;
+  packagePrice: string;
+  universityUrl: string;
+  deadlineDate: string;
+  startingDate: string;
+  tuitionFree: string;
+  sl_No: string;
+  scholarshipDetails: string;
+  universitysDescription: string;
+  courseName: string;
+  applicationRequirement: string;
+  idCard: string;
+};
 
 function MainModal() {
-  const [formData, setFormData] = useState({
-    // Row 1
-    name: "",
-    subscriptionPeriod: "",
-    price: "",
-    // Row 2
-    billingCycle1: "",
-    billingCycle2: "",
-    supportType: "Select Option 1",
-    // Row 3
-    subscriptionFrom: "",
-    additionalNotes: "",
-    total: "",
-    // Row 4
-    additionalServices: "",
-    packageDescription: "",
-    value: "",
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const [imgformData, setImgFormData] = useState<ImgFormData>({
+    secure_url: "",
   });
-  const [universityList, setUniversityList] = useState<Universities>({
-    all: [],
-    australia: [],
-    china: [],
-    malaysia: [],
-  });
+  const [packageFormData,setPackageFormData] = useState<Inputs>()
 
-  const { all: allUniversities, australia, china, malaysia } = universityList;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>();
+  const onSubmit: SubmitHandler<Inputs> = (data) => setPackageFormData(data);
 
-  const [selectedCountry, setSelectedCountry] = useState<countryOption | null>(
-    countryOptions[0]
-  );
+  const {
+    // formData,
+    selectedCountry,
+    selectedUniversity,
+    filteredUniversities,
+    selectUniversitiesProgram,
+    selectStudyLevel,
+    selectDuration,
+    selectLanguage,
+  } = state;
 
-  const [selectedUniversity, setSelectedUniversity] = useState<string | null>(
-    "Select University"
-  );
+  const formData = {
+    ...packageFormData,
+    selectedCountry,
+    selectedUniversity,
+    selectUniversitiesProgram,
+    selectStudyLevel,
+    selectDuration,
+    selectLanguage,
+  };
+  console.log("final Data",formData);
 
-  const [filteredUniversities, setFilteredUniversities] = useState<string[]>(
-    allUniversities[0] ? allUniversities : []
-  );
-  const [selectUniversitiesProgram, setSelectUniversitiesProgram] = useState<
-    string | null
-  >(UniversitiesProgram[0]);
-
-  const [selectStudyLevel, setSelectStudyLevel] = useState<string | null>(
-    studyLevel[0]
-  );
-
-  const [selectDuration, setSelectDuration] = useState<string | null>(
-    duration[0]
-  );
-
-  useEffect(() => {
-    const countryMap: Record<string, string[]> = {
-      All: allUniversities,
-      Australia: australia,
-      China: china,
-      Malaysia: malaysia,
-    };
-
-    setFilteredUniversities(countryMap[selectedCountry?.name ?? "All"] || []);
-  }, [selectedCountry, allUniversities, australia, china, malaysia]);
-
-  // console.log(universityList);
+  // console.log("formData", formData);
 
   useEffect(() => {
     fetch("/api/universities")
       .then((res) => res.json())
-      .then((data) => setUniversityList(data))
+      .then((data) => dispatch({ type: "SET_UNIVERSITIES", payload: data }))
       .catch((err) => console.error(err));
   }, []);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  const handleInputChange = async (e: any) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Cloudinary Upload
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", "pcakge_img_uploade");
+    data.append("cloud_name", "dqyfwfeed");
+
+    try {
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/dqyfwfeed/image/upload",
+        {
+          method: "POST",
+          body: data,
+        }
+      );
+
+      const result = await res.json();
+      console.log("Uploaded image URL:", result.secure_url);
+      // console.log(result)
+      if (!result.secure_url) {
+        console.log("img_link not found");
+      }
+      setImgFormData((prev) => ({
+        ...prev,
+        secure_url: result.secure_url,
+      }));
+    } catch (err) {
+      console.error("Upload failed:", err);
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Form submitted:", formData);
-  };
+  // const handleSubmit = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   console.log("Form submitted:", formData);
+  // };
 
-  if (!filteredUniversities) {
-    return null;
-  }
+  // if (!filteredUniversities) {
+  //   return null;
+  // }
 
-  if (!universityList) {
-    return "loading ......";
-  }
+  // those are my dropdown result
+  // console.log(
+  //   selectedCountry.name,
+  //   selectedUniversity,
+  //   selectUniversitiesProgram,
+  //   selectStudyLevel,
+  //   selectDuration
+  // );
 
-  console.log(countryOptions, selectedCountry);
-
+  // console.log("img: ", imgformData);
   return (
     <div className="mx-auto max-w-4xl overflow-auto bg-white/40">
       <div className="mb-8">
@@ -163,7 +255,7 @@ function MainModal() {
       </div>
 
       <Card className="p-8">
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* top row */}
           <div className="bg-[#F3F3F3] p-6 rounded-2xl">
             <h3 className="text-start mb-4">* Fill up to add packages</h3>
@@ -179,7 +271,9 @@ function MainModal() {
                     label="Country"
                     options={countryOptions}
                     selected={selectedCountry}
-                    onChange={setSelectedCountry}
+                    onChange={(value) =>
+                      dispatch({ type: "SET_COUNTRY", payload: value })
+                    }
                     displayKey="name"
                   />
                 </div>
@@ -191,24 +285,32 @@ function MainModal() {
                   label="*University"
                   options={filteredUniversities}
                   selected={selectedUniversity}
-                  onChange={setSelectedUniversity}
+                  onChange={(value) =>
+                    dispatch({ type: "SET_UNIVERSITY", payload: value })
+                  }
                 />
               </div>
 
               {/* uploade package img */}
               <div className="space-y-2">
-                <Label htmlFor="price" className="text-sm font-medium">
+                <Label htmlFor="imageUrl" className="text-sm font-medium">
                   Package Thumbnail & LOGO
                 </Label>
                 <Input
-                  id="price"
-                  name="price"
-                  placeholder=""
-                  value={formData.price}
+                  id="imageUrl"
+                  name="imageUrl"
+                  placeholder="uplode package photo"
                   onChange={handleInputChange}
                   className="bg-white"
                   type="file"
                 />
+                <Label className="text-sm font-medium">
+                  {imgformData.secure_url && (
+                    <span className="text-green-500">
+                      Imge uploaded successfully
+                    </span>
+                  )}
+                </Label>
               </div>
             </div>
           </div>
@@ -217,15 +319,14 @@ function MainModal() {
             {/* second row */}
             <div className="grid gap-6 grid-cols-3">
               <div className="space-y-2">
-                <Label htmlFor="billingCycle1" className="text-sm font-medium">
+                <Label htmlFor="packagePrice" className="text-sm font-medium">
                   Amount in BDT
                 </Label>
                 <Input
-                  id="billingCycle1"
-                  name="billingCycle1"
+                  id="packagePrice"
                   placeholder="Amount"
-                  value={formData.billingCycle1}
-                  onChange={handleInputChange}
+                  // value={formData.packagePrice}
+                  {...register("packagePrice", { required: true })}
                   className="bg-white"
                 />
               </div>
@@ -235,20 +336,21 @@ function MainModal() {
                   label="*Program"
                   options={UniversitiesProgram}
                   selected={selectUniversitiesProgram}
-                  onChange={setSelectUniversitiesProgram}
+                  onChange={(value) =>
+                    dispatch({ type: "SET_PROGRAM", payload: value })
+                  }
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="supportType" className="text-sm font-medium">
+                <Label htmlFor="universityUrl" className="text-sm font-medium">
                   University web URL
                 </Label>
                 <Input
-                  id="billingCycle1"
-                  name="billingCycle1"
+                  id="universityUrl"
                   placeholder="URL"
-                  value={formData.billingCycle1}
-                  onChange={handleInputChange}
+                  // onChange={handleInputChange}
                   className="bg-white"
+                  {...register("universityUrl", { required: true })}
                 />
               </div>
             </div>
@@ -256,37 +358,28 @@ function MainModal() {
             {/* third row */}
             <div className="grid gap-6 grid-cols-3">
               <div className="space-y-2">
-                <Label
-                  htmlFor="subscriptionFrom"
-                  className="text-sm font-medium"
-                >
+                <Label htmlFor="deadlineDate" className="text-sm font-medium">
                   Deadline date
                 </Label>
                 <Input
-                  id="subscriptionFrom"
-                  name="subscriptionFrom"
+                  id="deadlineDate"
                   placeholder=""
-                  value={formData.subscriptionFrom}
-                  onChange={handleInputChange}
                   className="bg-white"
                   type="date"
+                  {...register("deadlineDate", { required: true })}
                 />
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="additionalNotes"
-                  className="text-sm font-medium"
-                >
+                <Label htmlFor="startingDate" className="text-sm font-medium">
                   Starting Date
                 </Label>
                 <Input
-                  id="additionalNotes"
-                  name="additionalNotes"
+                  id="startingDate"
                   placeholder=""
-                  value={formData.additionalNotes}
-                  onChange={handleInputChange}
+                  // onChange={handleInputChange}
                   className="bg-white"
                   type="date"
+                  {...register("startingDate", { required: true })}
                 />
               </div>
               <div className="space-y-2">
@@ -294,7 +387,9 @@ function MainModal() {
                   label="*Study level"
                   options={studyLevel}
                   selected={selectStudyLevel}
-                  onChange={setSelectStudyLevel}
+                  onChange={(value) =>
+                    dispatch({ type: "SET_STUDY_LEVEL", payload: value })
+                  }
                 />
               </div>
             </div>
@@ -306,142 +401,122 @@ function MainModal() {
                   label="*Duration"
                   options={duration}
                   selected={selectDuration}
-                  onChange={setSelectDuration}
+                  onChange={(value) =>
+                    dispatch({ type: "SET_DURATION", payload: value })
+                  }
                 />
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="packageDescription"
-                  className="text-sm font-medium"
-                >
+                <Label htmlFor="tuitionFree" className="text-sm font-medium">
                   Tuition Fees in BDT
                 </Label>
                 <Input
-                  id="packageDescription"
-                  name="packageDescription"
+                  id="tuitionFree"
                   placeholder=""
-                  value={formData.packageDescription}
-                  onChange={handleInputChange}
+                  // onChange={handleInputChange}
                   className="bg-white"
+                  {...register("tuitionFree", { required: true })}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="value" className="text-sm font-medium">
+                <Label htmlFor="sl_No" className="text-sm font-medium">
                   Sl. No.
                 </Label>
                 <Input
-                  id="value"
-                  name="value"
+                  id="sl_No."
                   placeholder=""
-                  value={formData.value}
-                  onChange={handleInputChange}
+                  // onChange={handleInputChange}
                   className="bg-white"
+                  {...register("sl_No", { required: true })}
                 />
               </div>
             </div>
 
             {/* fiveth row */}
-            <div className="flex justify-between gap-6 ">
+            <div className="flex justify-between gap-6 items-center">
               <div className="space-y-2 flex-1">
                 <Label
-                  htmlFor="additionalServices"
+                  htmlFor="scholarshipDetails"
                   className="text-sm font-medium"
                 >
                   Scholarship Details
                 </Label>
                 <textarea
-                  id="packageDescription"
-                  name="packageDescription"
+                  id="scholarshipDetails"
                   placeholder="Enter Scholarship Details here....."
-                  value={formData.packageDescription}
                   // onChange={handleInputChange}
-                  className="bg-white w-full"
+                  className="bg-white w-full rounded-lg px-3"
+                  {...register("scholarshipDetails", { required: true })}
                 />
               </div>
               <div className="space-y-2 max-w-[245px] w-full">
-                <Label
-                  htmlFor="packageDescription"
-                  className="text-sm font-medium"
-                >
-                  Tuition Fees in BDT
-                </Label>
-                <Input
-                  id="packageDescription"
-                  name="packageDescription"
-                  placeholder=""
-                  value={formData.packageDescription}
-                  onChange={handleInputChange}
-                  className="bg-white"
+                <SelectDropdown
+                  label="Technical language"
+                  options={language}
+                  selected={selectLanguage}
+                  onChange={(value) =>
+                    dispatch({ type: "SET_LANGUAGE", payload: value })
+                  }
                 />
               </div>
             </div>
 
             {/* six row */}
-            <div className="flex justify-between gap-6 ">
+            <div className="flex justify-between gap-6 items-center">
               <div className="space-y-2 flex-1">
                 <Label
-                  htmlFor="additionalServices"
+                  htmlFor="universitysDescription"
                   className="text-sm font-medium"
                 >
                   University description
                 </Label>
                 <textarea
-                  id="packageDescription"
-                  name="packageDescription"
+                  id="universitysDescription"
                   placeholder="University Details here....."
-                  value={formData.packageDescription}
                   // onChange={handleInputChange}
-                  className="bg-white w-full"
+                  className="bg-white w-full rounded-lg px-3"
+                  {...register("universitysDescription", { required: true })}
                 />
               </div>
               <div className="space-y-2 max-w-[245px] w-full">
-                <Label
-                  htmlFor="packageDescription"
-                  className="text-sm font-medium"
-                >
+                <Label htmlFor="courseName" className="text-sm font-medium">
                   Course name
                 </Label>
                 <Input
-                  id="packageDescription"
-                  name="packageDescription"
+                  id="courseName"
                   placeholder=""
-                  value={formData.packageDescription}
-                  onChange={handleInputChange}
+                  // onChange={handleInputChange}
                   className="bg-white"
+                  {...register("courseName", { required: true })}
                 />
               </div>
             </div>
-            <div className="flex justify-between gap-6 ">
+            <div className="flex justify-between gap-6 items-center">
               <div className="space-y-2 flex-1">
                 <Label
-                  htmlFor="additionalServices"
+                  htmlFor="applicationRequirement"
                   className="text-sm font-medium"
                 >
                   Apply Requirements
                 </Label>
                 <textarea
-                  id="packageDescription"
-                  name="packageDescription"
+                  id="applicationRequirement"
                   placeholder="University Details here....."
-                  value={formData.packageDescription}
                   // onChange={handleInputChange}
-                  className="bg-white w-full"
+                  className="bg-white w-full rounded-lg px-3"
+                  {...register("applicationRequirement", { required: true })}
                 />
               </div>
               <div className="space-y-2 max-w-[245px] w-full">
-                <Label
-                  htmlFor="packageDescription"
-                  className="text-sm font-medium"
-                >
+                <Label htmlFor="idCard" className="text-sm font-medium">
                   ID Card
                 </Label>
                 <Input
-                  id="packageDescription"
-                  name="packageDescription"
+                  id="idCard"
                   placeholder=""
-                  value={formData.packageDescription}
-                  onChange={handleInputChange}
+                  // onChange={handleInputChange}
                   className="bg-white"
+                  {...register("idCard", { required: true })}
                 />
               </div>
             </div>
