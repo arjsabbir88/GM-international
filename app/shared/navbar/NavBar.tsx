@@ -75,9 +75,19 @@ export function NavBar() {
       <NavigationMenuList className="flex-wrap">
         {/* home section */}
         <NavigationMenuItem>
-          <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-            <NavigationMenuTrigger>Home</NavigationMenuTrigger>
-          </NavigationMenuLink>
+          <Link href="/">
+            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              Home
+            </NavigationMenuLink>
+          </Link>
+        </NavigationMenuItem>
+        {/* Dashboard */}
+        <NavigationMenuItem>
+          <Link href="/dashboard/scholarship/admin">
+            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              Dashboard
+            </NavigationMenuLink>
+          </Link>
         </NavigationMenuItem>
 
         {/*  service */}
@@ -110,7 +120,7 @@ export function NavBar() {
         <NavigationMenuItem className="hidden md:block">
           <NavigationMenuTrigger>Find Us</NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="grid w-[300px] gap-4">
+            <ul className="grid w-[300px] gap-4 ">
               <li>
                 <NavigationMenuLink asChild>
                   <Link href="#">
@@ -194,7 +204,10 @@ function ListItem({
   return (
     <li {...props}>
       <NavigationMenuLink asChild>
-        <Link href={href}>
+        <Link
+          href={href}
+          className="hover:bg-red-200 border hover:border-red-500 "
+        >
           <div className="text-sm leading-none font-medium">{title}</div>
           <p className="text-muted-foreground line-clamp-2 text-sm leading-snug">
             {children}

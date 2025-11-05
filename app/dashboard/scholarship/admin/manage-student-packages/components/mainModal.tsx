@@ -37,6 +37,31 @@ const countryOptions: countryOption[] = [
   { id: 3, name: "Malaysia" },
 ];
 
+const UniversitiesProgram: string[] = [
+  "Select Program",
+  "Health & Medicine",
+  "Business",
+  "Engineering",
+  "Language & calture",
+  "Cpmputing & IT",
+  "Teaching & Education",
+  "Economics",
+  "Art & Design",
+];
+
+const studyLevel: string[] = [
+  "Select study level",
+  "Doctorate",
+  "Postgraduate",
+  "Undergraduate",
+  "Vocational (vet)",
+  "Pre-Degree & Vocational",
+  "Fundation",
+  "School",
+];
+
+const duration: string[] = ["Select Duration", "2", "3", "4", "6", "8"];
+
 function MainModal() {
   const [formData, setFormData] = useState({
     // Row 1
@@ -75,6 +100,17 @@ function MainModal() {
 
   const [filteredUniversities, setFilteredUniversities] = useState<string[]>(
     allUniversities[0] ? allUniversities : []
+  );
+  const [selectUniversitiesProgram, setSelectUniversitiesProgram] = useState<
+    string | null
+  >(UniversitiesProgram[0]);
+
+  const [selectStudyLevel, setSelectStudyLevel] = useState<string | null>(
+    studyLevel[0]
+  );
+
+  const [selectDuration, setSelectDuration] = useState<string | null>(
+    duration[0]
   );
 
   useEffect(() => {
@@ -193,42 +229,14 @@ function MainModal() {
                   className="bg-white"
                 />
               </div>
+
               <div className="space-y-2">
-                <Label htmlFor="billingCycle2" className="text-sm font-medium">
-                  Program
-                </Label>
-                <select
-                  id="supportType"
-                  name="supportType"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm hover:cursor-pointer"
-                >
-                  <option
-                    value="Select Option 1"
-                    className="hover:cursor-pointer"
-                  >
-                    All
-                  </option>
-                  <option value="option2" className="hover:cursor-pointer">
-                    Health & Medicine
-                  </option>
-                  <option value="option3" className="hover:cursor-pointer">
-                    Business
-                  </option>
-                  <option value="option3" className="hover:cursor-pointer">
-                    Engineering
-                  </option>
-                  <option value="option3" className="hover:cursor-pointer">
-                    Language & calture
-                  </option>
-                  <option value="option3" className="hover:cursor-pointer">
-                    Cpmputing & IT
-                  </option>
-                  <option value="option3" className="hover:cursor-pointer">
-                    Teaching & Education
-                  </option>
-                </select>
+                <SelectDropdown
+                  label="*Program"
+                  options={UniversitiesProgram}
+                  selected={selectUniversitiesProgram}
+                  onChange={setSelectUniversitiesProgram}
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="supportType" className="text-sm font-medium">
@@ -282,73 +290,24 @@ function MainModal() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="total" className="text-sm font-medium">
-                  Study Level
-                </Label>
-                <select
-                  id="supportType"
-                  name="supportType"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm hover:cursor-pointer"
-                >
-                  <option
-                    value="Select Option 1"
-                    className="hover:cursor-pointer bg-white"
-                  >
-                    All
-                  </option>
-                  <option value="option2" className="hover:cursor-pointer">
-                    Health & Medicine
-                  </option>
-                  <option value="option3" className="hover:cursor-pointer">
-                    Business
-                  </option>
-                  <option value="option3" className="hover:cursor-pointer">
-                    Engineering
-                  </option>
-                  <option value="option3" className="hover:cursor-pointer">
-                    Language & calture
-                  </option>
-                  <option value="option3" className="hover:cursor-pointer">
-                    Cpmputing & IT
-                  </option>
-                  <option value="option3" className="hover:cursor-pointer">
-                    Teaching & Education
-                  </option>
-                </select>
+                <SelectDropdown
+                  label="*Study level"
+                  options={studyLevel}
+                  selected={selectStudyLevel}
+                  onChange={setSelectStudyLevel}
+                />
               </div>
             </div>
 
             {/* fourth row */}
             <div className="grid gap-6 grid-cols-3">
               <div className="space-y-2">
-                <Label
-                  htmlFor="additionalServices"
-                  className="text-sm font-medium"
-                >
-                  Duration
-                </Label>
-                <select
-                  id="supportType"
-                  name="supportType"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm hover:cursor-pointer"
-                >
-                  <option
-                    value="Select Option 1"
-                    className="hover:cursor-pointer bg-white"
-                  >
-                    All
-                  </option>
-                  <option value="option2" className="hover:cursor-pointer">
-                    2
-                  </option>
-                  <option value="option3" className="hover:cursor-pointer">
-                    4
-                  </option>
-                </select>
+                <SelectDropdown
+                  label="*Duration"
+                  options={duration}
+                  selected={selectDuration}
+                  onChange={setSelectDuration}
+                />
               </div>
               <div className="space-y-2">
                 <Label
