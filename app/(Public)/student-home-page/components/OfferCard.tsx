@@ -2,42 +2,43 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface Country {
   name: string;
 }
 
 interface Offer {
-//   _id: string;
-//   idCard: string;
-//   sl_No: string;
+  _id: string;
+  //   idCard: string;
+  //   sl_No: string;
   selectedCountry: Country;
   selectedUniversity: string;
-//   selectUniversitiesProgram: string;
-//   selectStudyLevel: string;
-//   selectDuration: string;
-//   selectLanguage: string;
-//   courseName: string;
-//   startingDate: string;
+  //   selectUniversitiesProgram: string;
+  //   selectStudyLevel: string;
+  //   selectDuration: string;
+  //   selectLanguage: string;
+  //   courseName: string;
+  //   startingDate: string;
   deadlineDate: string;
-//   tuitionFree: string;
+  //   tuitionFree: string;
   packagePrice: string;
   scholarshipDetails: string;
   imgURL: string;
-//   universityUrl: string;
-//   universitysDescription: string;
-//   applicationRequirement: string;
-//   createdAt: string;
+  //   universityUrl: string;
+  //   universitysDescription: string;
+  //   applicationRequirement: string;
+  //   createdAt: string;
 }
 
 interface OfferCardProps {
-  offer: Offer
+  offer: Offer;
 }
 
 export default function OfferCard({ offer }: OfferCardProps) {
   const [isHovered, setIsHovered] = useState(false);
 
-  console.log("offer", offer);
+  // console.log("offer", offer);
 
   return (
     <div
@@ -54,14 +55,14 @@ export default function OfferCard({ offer }: OfferCardProps) {
           {/* University Logo/Avatar */}
           <div className="mb-4 flex justify-center md:justify-start">
             <div
-              className={`w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 transition-all duration-300 ${
+              className={`w-16 h-16 md:w-20 md:h-20 rounded-full bg-linear-to-br from-gray-300 to-gray-400 transition-all duration-300 ${
                 isHovered ? "scale-110 shadow-lg" : ""
               }`}
             >
               <img
                 src={offer.imgURL}
                 alt=""
-                className={`w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 transition-all duration-300 ${
+                className={`w-16 h-16 md:w-20 md:h-20 rounded-full bg-linear-to-br from-gray-300 to-gray-400 transition-all duration-300 ${
                   isHovered ? "scale-110 shadow-lg" : ""
                 }`}
               />
@@ -100,22 +101,24 @@ export default function OfferCard({ offer }: OfferCardProps) {
         </div>
 
         {/* Description */}
-        <p className="text-xs md:text-sm text-gray-600 mb-6 flex-grow line-clamp-3 transition-colors duration-300">
+        <p className="text-xs md:text-sm text-gray-600 mb-6 grow line-clamp-3 transition-colors duration-300">
           {offer.scholarshipDetails}
         </p>
 
         {/* View Details Button */}
-        <Button
-          className={`w-full bg-[#CA2328] hover:bg-red-700 text-white font-semibold py-2 md:py-3 rounded-full transition-all duration-300 ease-in-out transform hover:cursor-pointer ${
-            isHovered ? "shadow-lg shadow-red-400 scale-105" : "shadow-md"
-          }`}
-        >
-          View Details
-        </Button>
+        <Link href={`/student-home-page/student-package-offer/${offer._id}`}>
+          <Button
+            className={`w-full bg-[#CA2328] hover:bg-red-700 text-white font-semibold py-2 md:py-3 rounded-full transition-all duration-300 ease-in-out transform hover:cursor-pointer ${
+              isHovered ? "shadow-lg shadow-red-400 scale-105" : "shadow-md"
+            }`}
+          >
+            View Details
+          </Button>
+        </Link>
       </div>
 
       <div
-        className={`absolute inset-0 rounded-3xl bg-gradient-to-r from-red-400 to-red-600 -z-10 transition-all duration-300 ease-in-out ${
+        className={`absolute inset-0 rounded-3xl bg-linear-to-r from-red-400 to-red-600 -z-10 transition-all duration-300 ease-in-out ${
           isHovered ? "opacity-20 blur-xl" : "opacity-0 blur-2xl"
         }`}
       />

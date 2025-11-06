@@ -3,6 +3,7 @@ import HeroSection from './components/HeroSection';
 import { TabsSection } from './components/tabs';
 import SupportSection from '@/app/components/HSupport/HSupport';
 import PackageOfferSection from './components/PackageOfferSection';
+import { NavBar } from '@/app/shared/navbar/NavBar';
 
 const StudentHomePage = () => {
   return (

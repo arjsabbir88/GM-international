@@ -1,35 +1,38 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import OfferCard from "./OfferCard"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import OfferCard from "./OfferCard";
+import Link from "next/link";
 
 interface Offer {
-  id: string
-  universityName: string
-  country: string
-  amount: string
-  deadline: string
-  description: string
+  id: string;
+  universityName: string;
+  country: string;
+  amount: string;
+  deadline: string;
+  description: string;
 }
 
-const PackageOfferSection=()=> {
-  const [offers, setOffers] = useState<Offer[]>([])
-  const [displayedOffers, setDisplayedOffers] = useState<Offer[]>([])
-  const [showAll, setShowAll] = useState(false)
-  const [loading, setLoading] = useState(true)
+const PackageOfferSection = () => {
+  const [offers, setOffers] = useState<Offer[]>([]);
+  const [displayedOffers, setDisplayedOffers] = useState<Offer[]>([]);
+  const [showAll, setShowAll] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Fetch from your database
     const fetchOffers = async () => {
       try {
         // Replace with your actual API endpoint
-        const response = await fetch("http://localhost:5000/admin/scholarship-package-management")
-        const data = await response.json()
-        setOffers(data)
-        setDisplayedOffers(data.slice(0, 3))
+        const response = await fetch(
+          "http://localhost:5000/admin/scholarship-package-management"
+        );
+        const data = await response.json();
+        setOffers(data);
+        setDisplayedOffers(data.slice(0, 3));
       } catch (error) {
-        console.error("Failed to fetch offers:", error)
+        console.error("Failed to fetch offers:", error);
         // Fallback demo data
         const demoOffers: Offer[] = [
           {
@@ -59,26 +62,26 @@ const PackageOfferSection=()=> {
             description:
               "Gorem ipsum dolor sit amet, consectetur adipiscing elit.Gorem ipsum dolor sit amet, consectetur adipiscing elit.",
           },
-        ]
-        setOffers(demoOffers)
-        setDisplayedOffers(demoOffers.slice(0, 3))
+        ];
+        setOffers(demoOffers);
+        setDisplayedOffers(demoOffers.slice(0, 3));
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchOffers()
-  }, [])
+    fetchOffers();
+  }, []);
 
   const handleViewMore = () => {
     if (showAll) {
-      setDisplayedOffers(offers.slice(0, 3))
-      setShowAll(false)
+      setDisplayedOffers(offers.slice(0, 3));
+      setShowAll(false);
     } else {
-      setDisplayedOffers(offers)
-      setShowAll(true)
+      setDisplayedOffers(offers);
+      setShowAll(true);
     }
-  }
+  };
 
   return (
     <section className="w-full py-12 md:py-20 px-4">
@@ -89,15 +92,16 @@ const PackageOfferSection=()=> {
             Explore our popular <span className="text-red-600">offers</span>
           </h2>
           <p className="text-gray-500 max-w-2xl mx-auto text-sm md:text-base">
-            Gorem ipsum dolor sit amet, consectetur adipiscing elit.Gorem ipsum dolor sit amet, consectetur adipiscing
-            elit.Gorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Gorem ipsum dolor sit amet, consectetur adipiscing elit.Gorem ipsum
+            dolor sit amet, consectetur adipiscing elit.Gorem ipsum dolor sit
+            amet, consectetur adipiscing elit.
           </p>
         </div>
 
         {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-10">
           {displayedOffers.map((offer) => (
-            <OfferCard key={offer.id} offer={offer}  />
+            <OfferCard key={offer.id} offer={offer} />
           ))}
         </div>
 
@@ -112,6 +116,15 @@ const PackageOfferSection=()=> {
             </Button>
           </div>
         )}
+        <div className="flex justify-center">
+          <Link href="/student-home-page/student-package-offer">
+            <Button
+              className="bg-red-600 hover:bg-red-700 text-white rounded-full px-6 py-2 md:px-8 md:py-3 font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95"
+            >
+              View More
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <style jsx>{`
@@ -144,8 +157,7 @@ const PackageOfferSection=()=> {
         }
       `}</style>
     </section>
-  )
-}
-
+  );
+};
 
 export default PackageOfferSection;
