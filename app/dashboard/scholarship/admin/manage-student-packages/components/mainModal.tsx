@@ -9,6 +9,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import SelectDropdown from "./selectDropDown";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { CheckCircle2Icon } from "lucide-react";
+import Swal from "sweetalert2";
 
 interface Universities {
   all: string[];
@@ -68,19 +71,6 @@ const duration: string[] = [
 const language: string[] = ["English", "Bangla", "Chinese", "Malaya"];
 
 const initialState = {
-  // form data
-  // formData: {
-  //   imgUrl: "",
-  //   packagePrice: "",
-  //   universityUrl: "",
-  //   deadlineDate: "",
-  //   startingDate: "",
-  //   tuitionFree: "",
-  //   sl_No: "",
-  //   packageDescription: "",
-  //   value: "",
-  // },
-  // selection data
   selectedCountry: countryOptions[0],
   selectedUniversity: "Select University",
   filteredUniversities: [],
@@ -92,15 +82,6 @@ const initialState = {
 
 function reducer(state: any, action: any) {
   switch (action.type) {
-    // case "SET_FORM":
-    //   return {
-    //     ...state,
-    //     formData: {
-    //       ...state.formData,
-    //       [action.payload.name]: action.payload.value,
-    //     },
-    //   };
-
     case "SET_UNIVERSITIES":
       return { ...state, universityList: action.payload };
 
@@ -148,20 +129,22 @@ type Inputs = {
   idCard: string;
 };
 
-function MainModal() {
+
+function MainModal () {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const [imgformData, setImgFormData] = useState<ImgFormData>({
     secure_url: "",
   });
-  const [packageFormData,setPackageFormData] = useState<Inputs>()
+  const [packageFormData, setPackageFormData] = useState<Inputs | null>();
+
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => setPackageFormData(data);
+  const onSubmit: SubmitHandler<Inputs> | null= (data) => setPackageFormData(data);
 
   const {
     // formData,
@@ -176,6 +159,7 @@ function MainModal() {
 
   const formData = {
     ...packageFormData,
+    imgURL: imgformData.secure_url,
     selectedCountry,
     selectedUniversity,
     selectUniversitiesProgram,
@@ -183,7 +167,7 @@ function MainModal() {
     selectDuration,
     selectLanguage,
   };
-  console.log("final Data",formData);
+  // console.log("final Data", formData);
 
   // console.log("formData", formData);
 
@@ -228,25 +212,62 @@ function MainModal() {
     }
   };
 
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   console.log("Form submitted:", formData);
-  // };
+  const handlePackage = async () => {
+    const formData = {
+      ...packageFormData,
+      imgURL: imgformData.secure_url,
+      selectedCountry,
+      selectedUniversity,
+      selectUniversitiesProgram,
+      selectStudyLevel,
+      selectDuration,
+      selectLanguage,
+      createdAt: new Date(),
+    };
+    console.log("formData :", formData);
+    try {
+      const addPackage = await fetch(
+        "http://localhost:5000/admin/scholarship-package-management",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
-  // if (!filteredUniversities) {
-  //   return null;
-  // }
+      const result = await addPackage.json();
 
-  // those are my dropdown result
-  // console.log(
-  //   selectedCountry.name,
-  //   selectedUniversity,
-  //   selectUniversitiesProgram,
-  //   selectStudyLevel,
-  //   selectDuration
-  // );
+      if (!result) {
+        Swal.fire({
+          title: "Scholarship Package Added successfully",
+          icon: "error",
+          draggable: false,
+          showConfirmButton: false,
+          timer: 2000,
+        });
+        return;
+      }
 
-  // console.log("img: ", imgformData);
+      console.log("Data added:", result);
+      if (result.insertedId) {
+        Swal.fire({
+          title: "Scholarship Package Added successfully",
+          icon: "success",
+          draggable: false,
+          showConfirmButton: false,
+          timer: 2000,
+        });
+
+        setPackageFormData(null)
+      }
+    } catch (error) {
+      console.error("Error while adding package:", error);
+    }
+  };
+
+  // console.log("img: ", imgformData.secure_url);
   return (
     <div className="mx-auto max-w-4xl overflow-auto bg-white/40">
       <div className="mb-8">
@@ -473,7 +494,6 @@ function MainModal() {
                 <textarea
                   id="universitysDescription"
                   placeholder="University Details here....."
-                  // onChange={handleInputChange}
                   className="bg-white w-full rounded-lg px-3"
                   {...register("universitysDescription", { required: true })}
                 />
@@ -485,7 +505,6 @@ function MainModal() {
                 <Input
                   id="courseName"
                   placeholder=""
-                  // onChange={handleInputChange}
                   className="bg-white"
                   {...register("courseName", { required: true })}
                 />
@@ -502,7 +521,6 @@ function MainModal() {
                 <textarea
                   id="applicationRequirement"
                   placeholder="University Details here....."
-                  // onChange={handleInputChange}
                   className="bg-white w-full rounded-lg px-3"
                   {...register("applicationRequirement", { required: true })}
                 />
@@ -514,7 +532,6 @@ function MainModal() {
                 <Input
                   id="idCard"
                   placeholder=""
-                  // onChange={handleInputChange}
                   className="bg-white"
                   {...register("idCard", { required: true })}
                 />
@@ -527,6 +544,7 @@ function MainModal() {
               <Button
                 type="button"
                 className="bg-black hover:bg-black/80 text-white"
+                onClick={() => handlePackage()}
               >
                 Add More +
               </Button>

@@ -33,16 +33,16 @@ import { Checkbox } from "@radix-ui/react-checkbox";
 
 export function TabsSection() {
   return (
-    <div className="flex w-7xl mx-auto flex-col gap-6 my-10">
-      <Tabs defaultValue="Courses">
-        <TabsList className="w-full mb-8 ">
+    <div className="flex w-7xl mx-auto flex-col gap-6 my-10 transition-all duration-500 ease-in-out transform hover:scale-102 hover:shadow-2xl hover:-translate-y-2 border-2 rounded-2xl">
+      <Tabs defaultValue="Courses" className="pb-4">
+        <TabsList className="w-full mb-8 bg-[#CA23281A]">
           <TabsTrigger value="Courses">Courses</TabsTrigger>
           <TabsTrigger value="Scholarships">Scholarships</TabsTrigger>
           <TabsTrigger value="Universities">Universities</TabsTrigger>
         </TabsList>
 
         {/* course tabs */}
-        <TabsContent value="Courses" className="flex gap-6 justify-around">
+        <TabsContent value="Courses" className="flex gap-6 justify-around px-4">
           {/* first option */}
           <NativeSelect>
             <NativeSelectOption value="">
@@ -112,7 +112,7 @@ export function TabsSection() {
         </TabsContent>
 
         {/* second tabs */}
-        <TabsContent value="Scholarships" className="flex gap-6 justify-around">
+        <TabsContent value="Scholarships" className="flex gap-6 justify-around px-4">
           {/* first option */}
           <NativeSelect>
             <NativeSelectOption value="">Select Study level</NativeSelectOption>
@@ -159,7 +159,7 @@ export function TabsSection() {
         </TabsContent>
 
         {/* third tabs */}
-        <TabsContent value="Universities" className="flex gap-6 justify-around">
+        <TabsContent value="Universities" className="flex gap-6 justify-around px-4">
           {/* first option */}
           <NativeSelect>
             <NativeSelectOption value="">
@@ -206,10 +206,10 @@ export function TabsSection() {
             <NativeSelectOption value="todo">Art & Design</NativeSelectOption>
           </NativeSelect>
         </TabsContent>
-      </Tabs>
       <div className="w-full text-center">
         <button className="bg-red-500 text-white font-bold rounded-xl hover:cursor-pointer px-4 py-2 hover:bg-red-800">Search</button>
       </div>
+      </Tabs>
     </div>
   );
 }
