@@ -2,7 +2,7 @@
 
 import { Plus } from "lucide-react";
 import React, { useState } from "react";
-import StudentPackageModal from "./components/PackageModal";
+import StudentPackageModal from "./components/StudentPackageModal";
 
 const ManageStudentPackage:React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
