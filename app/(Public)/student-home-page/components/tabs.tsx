@@ -1,35 +1,15 @@
-import { AppWindowIcon, CodeIcon } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+
+
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import {
   NativeSelect,
   NativeSelectOption,
 } from "@/components/ui/native-select";
-import { Checkbox } from "@radix-ui/react-checkbox";
 
-// export function NativeSelectDemo() {
-//   return (
-//     <NativeSelect>
-//       <NativeSelectOption value="">Select status</NativeSelectOption>
-//       <NativeSelectOption value="todo">Todo</NativeSelectOption>
-//       <NativeSelectOption value="in-progress">In Progress</NativeSelectOption>
-//       <NativeSelectOption value="done">Done</NativeSelectOption>
-//       <NativeSelectOption value="cancelled">Cancelled</NativeSelectOption>
-//     </NativeSelect>
-//   )
-// }
+
 
 export function TabsSection() {
   return (

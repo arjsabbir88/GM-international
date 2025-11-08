@@ -5,13 +5,19 @@ import { Button } from "@/components/ui/button";
 import OfferCard from "./OfferCard";
 import Link from "next/link";
 
+interface Country {
+  name: string;
+}
 interface Offer {
   id: string;
-  universityName: string;
-  country: string;
-  amount: string;
-  deadline: string;
-  description: string;
+  _id: string;
+  selectedCountry: Country;
+  selectedUniversity: string;
+  deadlineDate: string;
+  packagePrice: string;
+  scholarshipDetails: string;
+  imgURL: string;
+  
 }
 
 const PackageOfferSection = () => {
@@ -33,38 +39,6 @@ const PackageOfferSection = () => {
         setDisplayedOffers(data.slice(0, 3));
       } catch (error) {
         console.error("Failed to fetch offers:", error);
-        // Fallback demo data
-        const demoOffers: Offer[] = [
-          {
-            id: "1",
-            universityName: "University Name",
-            country: "Country",
-            amount: "Full-Tuition",
-            deadline: "September 12, 2025",
-            description:
-              "Gorem ipsum dolor sit amet, consectetur adipiscing elit.Gorem ipsum dolor sit amet, consectetur adipiscing elit.",
-          },
-          {
-            id: "2",
-            universityName: "University Name",
-            country: "Country",
-            amount: "Full-Tuition",
-            deadline: "September 12, 2025",
-            description:
-              "Gorem ipsum dolor sit amet, consectetur adipiscing elit.Gorem ipsum dolor sit amet, consectetur adipiscing elit.",
-          },
-          {
-            id: "3",
-            universityName: "University Name",
-            country: "Country",
-            amount: "Full-Tuition",
-            deadline: "September 12, 2025",
-            description:
-              "Gorem ipsum dolor sit amet, consectetur adipiscing elit.Gorem ipsum dolor sit amet, consectetur adipiscing elit.",
-          },
-        ];
-        setOffers(demoOffers);
-        setDisplayedOffers(demoOffers.slice(0, 3));
       } finally {
         setLoading(false);
       }

@@ -6,14 +6,24 @@ import { Filter } from "lucide-react";
 import OfferCard from "../components/OfferCard";
 import FilterTag from "./components/filtered";
 
+
+
+interface Country {
+  name: string;
+}
 interface Offer {
   id: string;
-  universityName: string;
-  country: string;
-  amount: string;
-  deadline: string;
-  description: string;
+  _id: string;
+  selectedCountry: Country;
+  selectedUniversity: string;
+
+  deadlineDate: string;
+  packagePrice: string;
+  scholarshipDetails: string;
+  imgURL: string;
+  
 }
+
 
 export default function ScholarshipListing() {
   const [filters, setFilters] = useState<string[]>(["Doctorate", "Australia"]);

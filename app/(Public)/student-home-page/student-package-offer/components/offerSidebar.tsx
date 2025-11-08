@@ -1,7 +1,54 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
-export function OfferSidebar() {
+interface OfferSidebarProps {
+  packageSidebarInfo: {
+    _id: string;
+    packagePrice: string;
+    courseName: string;
+    createdAt: string;
+    deadlineDate: string;
+    idCard: string;
+    selectDuration: string;
+    selectLanguage: string;
+    selectStudyLevel: string;
+    selectUniversitiesProgram: string;
+    sl_No: string;
+    startingDate: string;
+    tuitionFree: string;
+  };
+}
+
+export function OfferSidebar({ packageSidebarInfo }: OfferSidebarProps) {
+  const {
+    _id,
+    packagePrice,
+    courseName,
+    createdAt,
+    deadlineDate,
+    idCard,
+    selectDuration,
+    selectLanguage,
+    selectStudyLevel,
+    selectUniversitiesProgram,
+    sl_No,
+    startingDate,
+    tuitionFree,
+  } = packageSidebarInfo;
+
+  console.log(
+    "find the props",
+    packagePrice,
+    deadlineDate,
+    selectDuration,
+    selectLanguage,
+    startingDate,
+    tuitionFree
+  );
+
+  const createdBy = "admin";
+  const userRole = "admin";
+
   return (
     <Card className="sticky top-8 bg-muted/50">
       <CardContent className="p-6 space-y-4">
@@ -10,32 +57,54 @@ export function OfferSidebar() {
         <div className="space-y-3">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Starting Date:</span>
-            <span className="font-medium">Jan 01,2025</span>
+            <span className="font-medium">{startingDate}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Duration:</span>
-            <span className="font-medium">4 Years</span>
+            <span className="font-medium">{selectDuration}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Teaching Language:</span>
-            <span className="font-medium">English</span>
+            <span className="font-medium">{selectLanguage}</span>
           </div>
           <div className="flex justify-between text-sm border-t border-border pt-3">
             <span className="text-muted-foreground">Application Deadline:</span>
-            <span className="font-medium">Nov 05, 2024</span>
+            <span className="font-medium">{deadlineDate}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Tuition:</span>
-            <span className="font-medium">EDT 10245/Year</span>
+            <span className="font-medium">{tuitionFree}/Year</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Application Fee:</span>
-            <span className="font-medium">EDT 1234</span>
+            <span className="font-medium">{packagePrice}</span>
           </div>
           <div className="flex justify-between text-sm border-b border-border pb-3">
             <span className="text-muted-foreground">Service Fee:</span>
-            <span className="font-medium">EDT 1234</span>
+            <span className="font-medium">upcomming...</span>
           </div>
+
+          {/* this div for adming pannal */}
+          {userRole === "admin" ? (
+            <div className="border-b border-border pb-3 text-sm">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Created At:</span>
+                <span className="font-medium">
+                  {new Date(createdAt).toLocaleDateString()}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Created by:</span>
+                <span className="font-medium">{createdBy}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Package Id:</span>
+                <span className="font-medium">{_id}</span>
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
 
         <Button className="w-full bg-destructive hover:bg-destructive/90 text-primary-foreground font-semibold h-11">
@@ -43,5 +112,5 @@ export function OfferSidebar() {
         </Button>
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -40,7 +40,6 @@ const SelectDropdown = <T extends string | object>({
 
   const handleAddItem = () => {
     if (!newItem.trim()) return;
-    // এখানে চাইলে parent থেকে options update করতে পারো
     alert(`New item added: ${newItem}`);
     setNewItem("");
     setAddItems(false);

@@ -1,22 +1,22 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Users, Clock, CheckCircle, XCircle, ChevronDown } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import ApplicationTable from "../components/ApplicatoinTable"
-import Header from "../components/Header"
-import Sidebar from "../components/sidebar"
-import StatCard from "../components/stat_card"
-
+import { useState } from "react";
+import { Users, Clock, CheckCircle, XCircle, ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import ApplicationTable from "../components/ApplicatoinTable";
+import Header from "../components/Header";
+import Sidebar from "../components/sidebar";
+import StatCard from "../components/stat_card";
 
 export default function DashboardPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
     <div className="flex h-screen bg-background">
       {/* <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} /> */}
+      
 
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 flex flex-col overflow-auto">
         {/* <Header onMenuToggle={() => setSidebarOpen(!sidebarOpen)} sidebarOpen={sidebarOpen} /> */}
 
         <div className="flex-1 overflow-auto">
@@ -52,7 +52,9 @@ export default function DashboardPage() {
             {/* Application List */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-bold text-foreground">Application List</h2>
+                <h2 className="text-xl font-bold text-foreground">
+                  Application List
+                </h2>
                 <Button variant="outline" size="sm">
                   All <ChevronDown className="w-4 h-4 ml-2" />
                 </Button>
@@ -64,5 +66,5 @@ export default function DashboardPage() {
         </div>
       </main>
     </div>
-  )
+  );
 }
