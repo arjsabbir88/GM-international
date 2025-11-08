@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Upload, Loader2 } from "lucide-react";
 import Dropdown from "./components/dropDown";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { spawn } from "child_process";
 import Swal from "sweetalert2";
 
@@ -30,6 +30,7 @@ interface ImgFormData {
 
 export default function AdmissionForm() {
   const { id } = useParams();
+  const router = useRouter();
 
   //   console.log("find the id", params.id);
 
@@ -187,11 +188,11 @@ export default function AdmissionForm() {
       courseName: "BBA",
       coverage: "Tuition",
       email: "",
-      category: "Full",
+      category: "Full", 
       paymentMethod: "Bkash",
     });
     setUploaded(false)
-    console.log("clicked");
+    router.push(`/student-home-page/student-package-offer/${id}`)
   };
 
   return (
