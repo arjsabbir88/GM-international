@@ -117,7 +117,6 @@ export default function AddUniversityForm({onClose}:OnClose) {
           });
           return;
         }
-    
         console.log("data added", resultOfRes);
         if (resultOfRes.insertedId) {
           Swal.fire({
@@ -127,7 +126,6 @@ export default function AddUniversityForm({onClose}:OnClose) {
             showConfirmButton: false,
             timer: 2000,
           });
-
           onClose();
         }
   }

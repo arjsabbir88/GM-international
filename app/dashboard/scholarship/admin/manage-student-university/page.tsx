@@ -1,17 +1,28 @@
-import React from "react";
+
 import AddUniversity from "./components/addUniversity";
+import UniversityTable from "./components/universitiesTable";
 
 
+const ManageStudentUniveristy = async() => {
 
-const ManageStudentUniveristy = () => {
+  const data = await fetch('http://localhost:5000/mange-university/admin',{
+    cache : 'no-store',
+  });
+
+  const allUniversitiesData = await data.json();
+
+  console.log(allUniversitiesData);
+
   return (
-    <div className="min-h-screen w-7xl  text-center flex flex-col">
-      <div>
+    <div className="min-h-screen  text-center flex flex-col">
+      <div className="flex flex-col md:flex-row justify-between my-8 ">
+        <h1 className="text-3xl font-bold text-red-500">
+          University management
+        </h1>
         <AddUniversity/>
       </div>
-      <div className="text-4xl text-red-500 font-bold mx-auto flex justify-center items-center flex-col">
-        this is mange university
-        <h1 className="mx-auto text-3xl text-red-500">comming soon....</h1>
+      <div>
+        <UniversityTable allUniversitiesData = {allUniversitiesData}/>
       </div>
     </div>
   );
