@@ -1,4 +1,5 @@
 
+import useLoaderData from "@/app/api/Data_Fetch/useLoaderData";
 import AddUniversity from "./components/addUniversity";
 import UniversityTable from "./components/universitiesTable";
 
@@ -12,6 +13,8 @@ const ManageStudentUniveristy = async() => {
   const allUniversitiesData = await data.json();
 
   console.log(allUniversitiesData);
+
+  
 
   return (
     <div className="min-h-screen  text-center flex flex-col">
