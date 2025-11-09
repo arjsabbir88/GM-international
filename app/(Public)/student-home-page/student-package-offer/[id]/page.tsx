@@ -49,6 +49,7 @@ export default async function OfferDetailsPage({
   } = packageDetails;
 
   const packageSidebarInfo = {
+    id,
     _id,
     packagePrice,
     courseName,

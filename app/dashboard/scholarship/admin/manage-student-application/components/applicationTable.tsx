@@ -50,9 +50,9 @@ export function ApplicationTable({ applications }: ApplicationTableProps) {
   // Mobile/Tablet Card View
   const CardView = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {applications.map((app) => (
+      {applications.map((app,index) => (
         <div
-          key={app._id.$oid}
+          key={index}
           className="bg-card border border-border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
         >
           <div className="flex items-start gap-3 mb-4">
@@ -151,7 +151,7 @@ export function ApplicationTable({ applications }: ApplicationTableProps) {
           <tbody>
             {applications.map((app, index) => (
               <tr
-                key={app._id.$oid}
+                key={index}
                 className={`border-b border-border hover:bg-muted/30 transition-colors ${
                   index % 2 === 0 ? "bg-background/50" : "bg-background"
                 }`}

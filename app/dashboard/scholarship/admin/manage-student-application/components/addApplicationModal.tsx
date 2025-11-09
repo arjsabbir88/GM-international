@@ -1,14 +1,13 @@
 
+import AdmissionForm from "@/app/(Public)/student-home-page/student-package-offer/[id]/user-application-form/page";
 import React from "react";
-import MainModal from "./mainModal";
 
-interface StudentPackageModal {
+interface AddApplicationModal {
   isOpen: boolean;
   onClose: () => void;
 }
 
-
-const StudentPackageModal: React.FC<StudentPackageModal> = ({
+const AddApplicationModal: React.FC<AddApplicationModal> = ({
   isOpen,
   onClose,
 }) => {
@@ -26,12 +25,12 @@ const StudentPackageModal: React.FC<StudentPackageModal> = ({
           </button>
         </div>
 
-        <div className="w-full">
-          <MainModal/>
+        <div className="w-full font-bold p-3 rounded-2xl">
+          <AdmissionForm/>
         </div>
       </div>
     </div>
   );
 };
 
-export default StudentPackageModal;
+export default AddApplicationModal;

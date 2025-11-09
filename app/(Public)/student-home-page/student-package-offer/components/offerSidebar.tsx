@@ -4,6 +4,7 @@ import Link from "next/link";
 
 interface OfferSidebarProps {
   packageSidebarInfo: {
+    id: string;
     _id: string;
     packagePrice: string;
     courseName: string;
@@ -22,6 +23,7 @@ interface OfferSidebarProps {
 
 export function OfferSidebar({ packageSidebarInfo }: OfferSidebarProps) {
   const {
+    id,
     _id,
     packagePrice,
     courseName,
@@ -107,7 +109,10 @@ export function OfferSidebar({ packageSidebarInfo }: OfferSidebarProps) {
             ""
           )}
         </div>
-        <Link href='/student-home-page/student-package-offer/690c591caeca9bb3dad78359/user-application-form' className="hover:cursor-pointer">
+        <Link
+          href={`/student-home-page/student-package-offer/${id}/user-application-form`}
+          className="hover:cursor-pointer"
+        >
           <Button className="w-full bg-destructive hover:bg-destructive/90 text-primary-foreground font-semibold h-11 hover:cursor-pointer">
             Apply Now
           </Button>

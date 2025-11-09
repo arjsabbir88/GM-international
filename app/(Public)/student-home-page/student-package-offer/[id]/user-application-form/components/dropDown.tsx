@@ -30,7 +30,7 @@ export default function Dropdown({ options, value, onChange }: DropdownProps) {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-4 py-3 rounded-lg bg-white border border-gray-300 focus:border-red-600 focus:ring-2 focus:ring-red-200 transition-all duration-300 flex items-center justify-between text-sm sm:text-base hover:border-gray-400 group"
+        className="w-full px-4 py-3 rounded-lg bg-white border border-gray-300 focus:border-red-600 focus:ring-2 focus:ring-red-200 transition-all duration-300 flex items-center justify-between text-sm sm:text-base hover:border-red-400 group"
       >
         <span className="text-gray-700">{value}</span>
         <ChevronDown
@@ -52,7 +52,7 @@ export default function Dropdown({ options, value, onChange }: DropdownProps) {
                 setIsOpen(false)
               }}
               className={`w-full text-left px-4 py-3 transition-all duration-200 text-sm sm:text-base ${
-                option === value ? "bg-red-100 text-red-700 font-medium" : "text-gray-700 hover:bg-gray-100"
+                option === value ? "bg-red-100 text-red-700 font-medium" : "text-gray-700 hover:bg-red-100 hover:border hover:border-red-400 hover:cursor-pointer"
               }`}
             >
               {option}
