@@ -292,7 +292,6 @@ export default function AdmissionForm() {
                     id="fileUpload"
                     type="file"
                     onChange={(e) => handleImageChange(e)}
-                    // onAnimationEnd={() => setIsUploading(false)}
                     className="hidden"
                   />
                   {uploaded && (

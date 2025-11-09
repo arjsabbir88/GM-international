@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import AddUniversityForm from "./addUniversityForm";
 
 interface UniversityPackageModal {
   isOpen: boolean;
@@ -15,7 +16,7 @@ const AddUniversityModal: React.FC<UniversityPackageModal> = ({
 
   return (
     <div className="fixed inset-0 z-50 overflow-auto flex justify-center items-center bg-black/20 backdrop-blur-md p-4">
-      <div className="max-h-[80vh] bg-white shadow-xl p-6 w-full max-w-5xl text-center relative flex flex-col items-center overflow-auto rounded-2xl">
+      <div className="max-h-[80vh] bg-white shadow-xl p-8 w-full max-w-5xl text-center relative flex flex-col items-center overflow-auto rounded-2xl">
         <div className="w-full text-end">
           <button
             onClick={onClose}
@@ -25,8 +26,8 @@ const AddUniversityModal: React.FC<UniversityPackageModal> = ({
           </button>
         </div>
 
-        <div className="w-full text-3xl text-red-500 font-bold">
-          this is modal content part
+        <div className="w-full">
+          <AddUniversityForm onClose={onClose}/>
         </div>
       </div>
     </div>
