@@ -1,58 +1,24 @@
-import Image from "next/image"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 interface University {
-  _id: string
-  country: string
-  university: string
-  studyLevel: string
-  universityUrl: string
-  introduction: string
-  photo: string
+  _id: string;
+  country: string;
+  university: string;
+  studyLevel: string;
+  universityUrl: string;
+  introduction: string;
+  photo: string;
 }
 
-// const MOCK_UNIVERSITIES: University[] = [
-//   {
-//     _id: "1",
-//     country: "USA",
-//     university: "Harvard University",
-//     studyLevel: "Undergraduate & Graduate",
-//     universityUrl: "https://harvard.edu",
-//     introduction:
-//       "Harvard University is one of the most prestigious universities in the world, known for its academic excellence and influential research across multiple disciplines.",
-//     photo: "/harvard-university-building.jpg",
-//   },
-//   {
-//     _id: "2",
-//     country: "UK",
-//     university: "Oxford University",
-//     studyLevel: "Undergraduate & Graduate",
-//     universityUrl: "https://oxford.edu",
-//     introduction:
-//       "Oxford University is the oldest university in the English-speaking world, celebrated for its tutorial system and outstanding academic programs.",
-//     photo: "/oxford-university-historic-building.jpg",
-//   },
-//   {
-//     _id: "3",
-//     country: "Canada",
-//     university: "University of Toronto",
-//     studyLevel: "Undergraduate & Graduate",
-//     universityUrl: "https://toronto.edu",
-//     introduction:
-//       "University of Toronto is Canada's leading research university with a strong focus on innovation, research, and global impact.",
-//     photo: "/university-of-toronto-campus.jpg",
-//   },
-// ]
-
 export default async function UniversitySection() {
-
-    const data = await fetch('http://localhost:5000/mange-university/admin',{
-        cache: "no-cache"
-    });
+  const data = await fetch("http://localhost:5000/mange-university/admin", {
+    cache: "no-cache",
+  });
 
   const universities = await data.json();
-  const displayedUniversities = universities.slice(0, 3)
+  const displayedUniversities = universities.slice(0, 3);
 
   return (
     <section className="w-full py-12 px-4 sm:px-6 lg:px-8">
@@ -74,14 +40,22 @@ export default async function UniversitySection() {
         {/* View More Button */}
         {universities.length > 3 && (
           <div className="flex justify-center">
-            <Button asChild className="bg-red-600 hover:bg-red-700 text-white px-8 py-2 rounded-full font-semibold">
+            <Button
+              asChild
+              className="bg-red-600 hover:bg-red-700 text-white px-8 py-2 rounded-full font-semibold"
+            >
               <Link href="/universities">View More</Link>
             </Button>
           </div>
         )}
       </div>
+      <div className="text-center">
+        <Link href="/student-home-page/universities">
+          <Button>View more</Button>
+        </Link>
+      </div>
     </section>
-  )
+  );
 }
 
 function UniversityCard({ university }: { university: University }) {
@@ -101,43 +75,30 @@ function UniversityCard({ university }: { university: University }) {
       {/* Content Container */}
       <div className="p-5 sm:p-6 flex flex-col grow">
         {/* University Name */}
-        <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-1">{university.university}</h3>
+        <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-1">
+          {university.university}
+        </h3>
 
         {/* Country */}
-        <p className="text-xs sm:text-sm text-gray-500 font-semibold mb-3">{university.country}</p>
+        <p className="text-xs sm:text-sm text-gray-500 font-semibold mb-3">
+          {university.country}
+        </p>
 
         {/* Introduction/Description */}
-        <p className="text-sm text-gray-600 leading-relaxed mb-5 grow line-clamp-3">{university.introduction}</p>
+        <p className="text-sm text-gray-600 leading-relaxed mb-5 grow line-clamp-3">
+          {university.introduction}
+        </p>
 
         {/* View Details Button */}
-        <Button
-          asChild
-          variant="outline"
-          className="border-red-600 text-red-600 hover:bg-red-50 w-full font-semibold bg-transparent"
-        >
-          <Link href={`/universities/${university._id}`}>View Details</Link>
-        </Button>
+        <Link href={`/student-home-page/universities/${university._id}`}>
+          <Button
+            variant="outline"
+            className="border-red-600 text-red-600 hover:bg-red-50 w-full font-semibold bg-transparent"
+          >
+            View Details
+          </Button>
+        </Link>
       </div>
     </div>
-  )
+  );
 }
-
-/*
-async function getUniversities(): Promise<University[]> {
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000"
-  
-  try {
-    const response = await fetch(`${backendUrl}/mange-university/admin`, {
-      cache: "no-cache",
-      headers: { "Content-Type": "application/json" },
-    })
-    
-    if (!response.ok) return MOCK_UNIVERSITIES
-    const data = await response.json()
-    return Array.isArray(data) ? data : MOCK_UNIVERSITIES
-  } catch (error) {
-    console.error("API fetch failed:", error)
-    return MOCK_UNIVERSITIES
-  }
-}
-*/

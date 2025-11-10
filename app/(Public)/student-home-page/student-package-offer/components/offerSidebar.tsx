@@ -110,7 +110,7 @@ export function OfferSidebar({ packageSidebarInfo }: OfferSidebarProps) {
           )}
         </div>
         <Link
-          href={`/student-home-page/student-package-offer/${id}/user-application-form`}
+          href={`/student-home-page/student-package-offer/user_application_form`}
           className="hover:cursor-pointer"
         >
           <Button className="w-full bg-destructive hover:bg-destructive/90 text-primary-foreground font-semibold h-11 hover:cursor-pointer">

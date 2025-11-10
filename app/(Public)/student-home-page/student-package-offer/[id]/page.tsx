@@ -90,7 +90,7 @@ export default async function OfferDetailsPage({
                   {selectedUniversity}
                 </h3>
                 <p className="text-sm text-gray-600 mb-4 transition-all duration-300">
-                  {selectedCountry.name}
+                  {/* {selectedCountry.name} */}
                 </p>
               </div>
             </div>

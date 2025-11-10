@@ -21,7 +21,7 @@ const StudentHomePage = () => {
         <div>
             <UniversitySection />
         </div>
-        <div>
+        <div className=''>
             <SupportSection/>
         </div>
     </div>
