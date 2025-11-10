@@ -4,10 +4,24 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+
+type Inputs = {
+  userName: string;
+  password: string;
+  rememberMe: boolean;
+};
 
 export default function LoginPage() {
-  const [rememberMe, setRememberMe] = useState(false);
 
+
+  const { register, handleSubmit,control, watch, formState } = useForm<Inputs>({
+    defaultValues: {
+      rememberMe: false,
+    },
+  });
+
+  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
 
   return (
     <div className="min-h-screen bg-white flex max-w-7xl mx-auto">
@@ -35,12 +49,13 @@ export default function LoginPage() {
           </div>
 
           {/* Form */}
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {/* Username */}
             <div>
               <Input
                 type="text"
                 placeholder="Username"
+                {...register("userName", { required: true })}
                 className="w-full px-4 py-3 rounded-lg border border-red-300 focus:outline-none focus:ring-2 focus:border-red-500"
               />
             </div>
@@ -49,18 +64,25 @@ export default function LoginPage() {
             <div>
               <Input
                 type="password"
+                {...register("password", { required: true })}
                 placeholder="Password"
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="w-full px-4 py-3 rounded-lg border border-red-300 focus:outline-none focus:ring-2 focus:ring-red-500"
               />
             </div>
 
             {/* Remember Me & Forgot Password */}
             <div className="flex items-center justify-between text-sm">
               <label className="flex items-center gap-2 cursor-pointer">
-                <Checkbox
-                  checked={rememberMe}
-                  onCheckedChange={() => setRememberMe((prev) => !prev)}
-                  className="accent-red-600"
+                <Controller
+                  name="rememberMe"
+                  control={control}
+                  render={({ field }) => (
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={(checked) => field.onChange(checked)}
+                      className="accent-red-600"
+                    />
+                  )}
                 />
                 <span className="text-gray-700">Remember me</span>
               </label>
@@ -81,8 +103,11 @@ export default function LoginPage() {
           {/* Sign Up Link */}
           <p className="mt-6 text-center text-gray-600">
             Don't Have an account?{" "}
-            <Link href="/auth/signup" className="text-red-600 hover:underline font-semibold">
-             Click to signup
+            <Link
+              href="/auth/signup"
+              className="text-red-600 hover:underline font-semibold"
+            >
+              Click to signup
             </Link>
           </p>
 

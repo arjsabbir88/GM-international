@@ -1,12 +1,27 @@
-"use client";
-import { useState } from "react";
+"use client"
+
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
+import { SubmitHandler, useForm } from "react-hook-form";
+
+type Inputs = {
+    Username : string;
+    password: string;
+    email: string;
+    phone: string;
+}
 
 export default function SignUp() {
-  const [rememberMe, setRememberMe] = useState(false);
+
+    const {register,handleSubmit,watch,formState,reset} = useForm<Inputs>();
+
+    const onSubmit : SubmitHandler<Inputs> = (data) =>{
+        console.log(data)
+        reset();
+    };
 
 
   return (
@@ -32,12 +47,13 @@ export default function SignUp() {
           </div>
 
           {/* Form */}
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {/* Username */}
             <div>
             <label>Name</label>
               <Input
                 type="text"
+                {...register("Username",{required: true})}
                 placeholder="Username"
                 className="w-full px-4 py-3 rounded-lg border border-red-300 focus:outline-none focus:ring-2 focus:border-red-500"
               />
@@ -48,6 +64,7 @@ export default function SignUp() {
                 <label>Email</label>
               <Input
                 type="email"
+                {...register("email",{required: true})}
                 placeholder="info@gmail.com"
                 className="w-full px-4 py-3 rounded-lg border border-red-300 focus:outline-none focus:ring-2 focus:ring-red-500"
               />
@@ -58,6 +75,7 @@ export default function SignUp() {
                 <label>Phone</label>
               <Input
                 type="phone"
+                {...register("phone", {required: true})}
                 placeholder="+92094839372"
                 className="w-full px-4 py-3 rounded-lg border border-red-300 focus:outline-none focus:ring-2 focus:ring-red-500"
               />
@@ -67,6 +85,7 @@ export default function SignUp() {
                 <label>Password</label>
               <Input
                 type="password"
+                {...register("password", {required:true})}
                 placeholder="*********"
                 className="w-full px-4 py-3 rounded-lg border border-red-300 focus:outline-none focus:ring-2 focus:ring-red-500"
               />
