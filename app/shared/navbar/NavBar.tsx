@@ -2,7 +2,12 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { CircleCheckIcon, CircleHelpIcon, CircleIcon } from "lucide-react";
+import {
+  CircleCheckIcon,
+  CircleHelpIcon,
+  CircleIcon,
+  Phone,
+} from "lucide-react";
 
 // import { useIsMobile } from "@/hooks/use-mobile"
 import {
@@ -14,6 +19,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import HotlineButton from "./components/hotlineButton";
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -59,7 +65,7 @@ export function NavBar() {
   return (
     <NavigationMenu
       viewport={false}
-      className="max-w-11/12 mx-auto flex justify-around items-center py-3"
+      className="max-w-11/12 mx-auto flex justify-around items-center py-3 border-b "
     >
       <NavigationMenuList>
         <NavigationMenuItem>
@@ -67,7 +73,7 @@ export function NavBar() {
             <img
               src="https://i.postimg.cc/WbV55LZS/Group-2.png"
               alt="company_logo"
-              className="w-10 h-10"
+              className="max-w-20"
             />
           </Link>
         </NavigationMenuItem>
@@ -184,15 +190,21 @@ export function NavBar() {
       {/* btn section */}
       <NavigationMenuList>
         <NavigationMenuItem>
-          <img
-            src="https://i.postimg.cc/WbV55LZS/Group-2.png"
-            alt="company_logo"
-            className="w-10 h-10"
-          />
+          <HotlineButton />
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <Link
+            href="/auth/signin"
+            className="rounded-md px-6 py-2 ml-4 overflow-hidden relative group cursor-pointer border-2 font-medium border-red-600 text-red-600 hover:text-white hover:bg-red-500"
+          >
+            <span className="relative transition duration-300 ease">
+              Login
+            </span>
+          </Link>
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
-  );
+  );  
 }
 
 function ListItem({
