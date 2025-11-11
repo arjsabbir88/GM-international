@@ -215,7 +215,6 @@
 // };
 
 
-
 import type { NextAuthOptions } from "next-auth";
 import { connectDB } from "./lib/mongodb";
 import { createduserFromAuth, findUserByEmail } from "./lib/user.service";

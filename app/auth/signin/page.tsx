@@ -1,10 +1,13 @@
 "use client";
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 type Inputs = {
   userName: string;
@@ -13,15 +16,33 @@ type Inputs = {
 };
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-
-  const { register, handleSubmit,control, watch, formState } = useForm<Inputs>({
-    defaultValues: {
-      rememberMe: false,
-    },
-  });
+  const { register, handleSubmit, control, watch, formState } = useForm<Inputs>(
+    {
+      defaultValues: {
+        rememberMe: false,
+      },
+    }
+  );
 
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+
+  const handleOAuthSignIn = (provider: "google" | "facebook") => {
+    setIsLoading(true);
+    signIn(provider, { redirect: false })
+      .then((result) => {
+        if (result?.error) {
+          setError(`Failed to sign in with ${provider}`);
+        } else {
+          router.push("/dashboard");
+        }
+      })
+      .catch(() => setError(`Failed to sign in with ${provider}`))
+      .finally(() => setIsLoading(false));
+  };
 
   return (
     <div className="min-h-screen bg-white flex max-w-7xl mx-auto">
@@ -120,7 +141,10 @@ export default function LoginPage() {
 
           {/* Social Login */}
           <div className="flex gap-4">
-            <button className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+            <button
+              onClick={() => handleOAuthSignIn("google")}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            >
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                 <path
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -143,7 +167,10 @@ export default function LoginPage() {
                 Google
               </span>
             </button>
-            <button className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+            <button
+              onClick={() => handleOAuthSignIn("facebook")}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            >
               <svg
                 className="w-5 h-5 text-blue-600"
                 fill="currentColor"
