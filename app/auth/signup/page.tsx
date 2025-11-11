@@ -1,28 +1,69 @@
-"use client"
-
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
+import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 type Inputs = {
-    Username : string;
-    password: string;
-    email: string;
-    phone: string;
-}
+  username: string;
+  password: string;
+  email: string;
+  phone: string;
+  userRole: string;
+};
 
 export default function SignUp() {
+  const [isError, setIsError] = useState("");
 
-    const {register,handleSubmit,watch,formState,reset} = useForm<Inputs>();
+  const { register, handleSubmit, watch, formState, reset } = useForm<Inputs>();
 
-    const onSubmit : SubmitHandler<Inputs> = (data) =>{
-        console.log(data)
-        reset();
-    };
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    const { username, password, email, phone } = data;
 
+    // console.log(username, password, email, phone);
+
+    if (!username || !password || !email || !phone) {
+      setIsError("Please full fill the criteria");
+      return;
+    }
+
+    // const passwordRegex =
+    //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-={}\[\]:;"'<>,.?/~`|\\]).{8,}$/;
+
+    // if (!passwordRegex.test(password)) {
+    //   setIsError(
+    //     "Password must contain uppercase, lowercase, number, special character, and be at least 8 characters long."
+    //   );
+    // }
+    const api = "/api/auth/register";
+    console.log(api)
+    try {
+      const response = await fetch(api, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          password,
+          email,
+          phone,
+          createdAt : new Date(),
+          userRole : "user",
+        }),
+      });
+
+      const data = await response.json();
+      console.log("data",data);
+    } catch {
+      setIsError("An error occurred. Please try again.");
+    }
+
+    // console.log(data)
+    // reset();
+  };
 
   return (
     <div className="min-h-screen bg-white flex max-w-7xl mx-auto">
@@ -42,18 +83,19 @@ export default function SignUp() {
 
           {/* Heading */}
           <div className="mb-8">
-            <h1 className="text-4xl md:text-5xl text-gray-900 mb-2">Sign up to continue</h1>
-            
+            <h1 className="text-4xl md:text-5xl text-gray-900 mb-2">
+              Sign up to continue
+            </h1>
           </div>
 
           {/* Form */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {/* Username */}
             <div>
-            <label>Name</label>
+              <label>Name</label>
               <Input
                 type="text"
-                {...register("Username",{required: true})}
+                {...register("username", { required: true })}
                 placeholder="Username"
                 className="w-full px-4 py-3 rounded-lg border border-red-300 focus:outline-none focus:ring-2 focus:border-red-500"
               />
@@ -61,10 +103,10 @@ export default function SignUp() {
 
             {/* Password */}
             <div>
-                <label>Email</label>
+              <label>Email</label>
               <Input
                 type="email"
-                {...register("email",{required: true})}
+                {...register("email", { required: true })}
                 placeholder="info@gmail.com"
                 className="w-full px-4 py-3 rounded-lg border border-red-300 focus:outline-none focus:ring-2 focus:ring-red-500"
               />
@@ -72,26 +114,25 @@ export default function SignUp() {
 
             {/* Phone */}
             <div>
-                <label>Phone</label>
+              <label>Phone</label>
               <Input
                 type="phone"
-                {...register("phone", {required: true})}
+                {...register("phone", { required: true })}
                 placeholder="+92094839372"
                 className="w-full px-4 py-3 rounded-lg border border-red-300 focus:outline-none focus:ring-2 focus:ring-red-500"
               />
             </div>
             {/* password */}
             <div>
-                <label>Password</label>
+              <label>Password</label>
               <Input
                 type="password"
-                {...register("password", {required:true})}
+                {...register("password", { required: true })}
                 placeholder="*********"
                 className="w-full px-4 py-3 rounded-lg border border-red-300 focus:outline-none focus:ring-2 focus:ring-red-500"
               />
               <label className="text-sm">Must be at least 8 characters </label>
             </div>
-
 
             {/* Login Button */}
             <Button
@@ -105,7 +146,10 @@ export default function SignUp() {
           {/* Sign Up Link */}
           <p className="mt-6 text-center text-gray-600">
             Already have an account?{" "}
-            <Link href="/auth/signin" className="text-red-600 hover:underline font-semibold">
+            <Link
+              href="/auth/signin"
+              className="text-red-600 hover:underline font-semibold"
+            >
               Click to login
             </Link>
           </p>
@@ -161,7 +205,10 @@ export default function SignUp() {
       {/* Right Side - Illustration */}
       <div className="hidden md:flex w-1/2 items-center justify-center p-8">
         <div className="bounce-animation">
-          <img src="https://i.postimg.cc/pd9yyNSR/Illustration.png" alt="login" />
+          <img
+            src="https://i.postimg.cc/pd9yyNSR/Illustration.png"
+            alt="login"
+          />
         </div>
       </div>
     </div>
