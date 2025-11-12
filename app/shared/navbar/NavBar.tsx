@@ -20,6 +20,15 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import HotlineButton from "./components/hotlineButton";
+import { useSession } from "next-auth/react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { DropdownMenu, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@radix-ui/react-dropdown-menu";
+import { UserDropdown } from "./components/DropdownMenuOnNavbar";
+
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -61,6 +70,10 @@ const components: { title: string; href: string; description: string }[] = [
 
 export function NavBar() {
   // const isMobile = useIsMobile()
+
+  const { data: session, status } = useSession();
+
+  // console.log(sassion?.user?.email, status);
 
   return (
     <NavigationMenu
@@ -192,19 +205,25 @@ export function NavBar() {
         <NavigationMenuItem>
           <HotlineButton />
         </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link
-            href="/auth/signin"
-            className="rounded-md px-6 py-2 ml-4 overflow-hidden relative group cursor-pointer border-2 font-medium border-red-600 text-red-600 hover:text-white hover:bg-red-500"
-          >
-            <span className="relative transition duration-300 ease">
-              Login
-            </span>
-          </Link>
-        </NavigationMenuItem>
+        {session?.user?.email ? (
+          <NavigationMenuItem>
+            <UserDropdown email={session.user.email} photo={session.user.image || undefined} name={session.user.name || undefined}/>
+          </NavigationMenuItem>
+        ) : (
+          <NavigationMenuItem>
+            <Link
+              href="/auth/signin"
+              className="rounded-md px-6 py-2 ml-4 overflow-hidden relative group cursor-pointer border-2 font-medium border-red-600 text-red-600 hover:text-white hover:bg-red-500"
+            >
+              <span className="relative transition duration-300 ease">
+                Login
+              </span>
+            </Link>
+          </NavigationMenuItem>
+        )}
       </NavigationMenuList>
     </NavigationMenu>
-  );  
+  );
 }
 
 function ListItem({

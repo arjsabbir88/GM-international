@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { NavBar } from "./shared/navbar/NavBar";
+import SessionWrapper from "./SessionWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,10 +29,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="sticky top-0 z-50 bg-white">
-          <NavBar/>
-        </div>
-        <div>{children}</div>
+        <SessionWrapper>
+          <div className="sticky top-0 z-50 bg-white">
+            <NavBar />
+          </div>
+          {children}
+        </SessionWrapper>
       </body>
     </html>
   );

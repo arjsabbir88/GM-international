@@ -28,7 +28,23 @@ export default function LoginPage() {
     }
   );
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    setIsLoading(true);
+    signIn("credentials", {
+      redirect: false,
+      email: data.userName,
+      password: data.password,
+    })
+      .then((result) => {
+        if (result?.error) {
+          setError("Invalid username or password");
+        } else {
+          router.push("/");
+        }
+      })
+      .catch(() => setError("An unexpected error occurred"))
+      .finally(() => setIsLoading(false));
+  };
 
   const handleOAuthSignIn = (provider: "google" | "facebook") => {
     setIsLoading(true);
@@ -43,6 +59,10 @@ export default function LoginPage() {
       .catch(() => setError(`Failed to sign in with ${provider}`))
       .finally(() => setIsLoading(false));
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-white flex max-w-7xl mx-auto">
