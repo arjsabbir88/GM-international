@@ -6,6 +6,8 @@ import { useState, useRef, useEffect } from "react";
 import { LogOut, LayoutDashboard, User } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import useUserRole from "@/app/useContext/useUserRole";
+import Link from "next/link";
 
 interface UserDropdownProps {
   email?: string;
@@ -15,6 +17,7 @@ interface UserDropdownProps {
 
 export function UserDropdown({ email, photo, name }: UserDropdownProps) {
   const router = useRouter();
+  const result = useUserRole();
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -22,6 +25,8 @@ export function UserDropdown({ email, photo, name }: UserDropdownProps) {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
     undefined
   );
+
+  const { userRole, loading } = result;
 
   // Check if device is mobile
   useEffect(() => {
@@ -112,7 +117,7 @@ export function UserDropdown({ email, photo, name }: UserDropdownProps) {
     setIsOpen(false);
   };
 
-  if (isLoading) {
+  if (isLoading || loading) {
     return <p>loading......</p>;
   }
 
@@ -172,12 +177,23 @@ export function UserDropdown({ email, photo, name }: UserDropdownProps) {
             label="Profile"
             onClick={() => handleMenuItemClick("Profile")}
           />
-
-          <MenuItemWithIcon
-            icon={LayoutDashboard}
-            label="Dashboard"
-            onClick={() => handleMenuItemClick("Dashboard")}
-          />
+          {userRole === "admin" ? (
+            <Link href="/dashboard/scholarship/admin">
+              <MenuItemWithIcon
+                icon={LayoutDashboard}
+                label="Dashboard"
+                onClick={() => handleMenuItemClick("Dashboard")}
+              />
+            </Link>
+          ) : (
+            <Link href="/dashboard/scholarship/user">
+              <MenuItemWithIcon
+                icon={LayoutDashboard}
+                label="Dashboard"
+                onClick={() => handleMenuItemClick("Dashboard")}
+              />
+            </Link>
+          )}
         </div>
 
         {/* Logout Button */}

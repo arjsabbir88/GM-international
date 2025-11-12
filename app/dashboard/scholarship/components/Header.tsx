@@ -1,23 +1,37 @@
-"use client"
+"use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Bell, Menu } from "lucide-react"
+import { auth } from "@/auth";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Bell, Menu } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 interface HeaderProps {
-  onMenuToggle: () => void
-  sidebarOpen: boolean
+  onMenuToggle: () => void;
+  sidebarOpen: boolean;
 }
 
 export default function Header({ onMenuToggle, sidebarOpen }: HeaderProps) {
+  // const session = useSess
+
+  const { data: session, status } = useSession();
+
+  const email = session?.user?.email;
+  const name = session?.user?.name;
+
+  const photo = session?.user?.image;
+
   return (
     <header className="bg-background border-b border-border px-6 py-4 flex items-center justify-between">
       <div className="flex items-center gap-4">
-        <button onClick={onMenuToggle} className="md:hidden p-2 hover:bg-muted rounded-lg transition-colors">
+        <button
+          onClick={onMenuToggle}
+          className="md:hidden p-2 hover:bg-muted rounded-lg transition-colors"
+        >
           <Menu className="w-5 h-5 text-foreground" />
         </button>
 
         <h1 className="text-2xl font-bold text-foreground">
-          Admin <span className="text-red-600">Dashboard</span>
+          User <span className="text-red-600">Dashboard</span>
         </h1>
       </div>
 
@@ -29,14 +43,23 @@ export default function Header({ onMenuToggle, sidebarOpen }: HeaderProps) {
 
         <div className="flex items-center gap-3">
           <div className="text-right">
-            <p className="text-sm font-medium text-foreground">Mr. admin</p>
+            <p className="text-sm font-medium text-foreground">{name}</p>
           </div>
           <Avatar>
-            <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" />
-            <AvatarFallback>MA</AvatarFallback>
+            {!photo ? (
+              <span className="absolute inset-0 flex items-center justify-center bg-red-200 text-gray-600 font-semibold">
+                {name ? name.charAt(0).toUpperCase() : "U"}
+              </span>
+            ) : (
+              <img
+                src={photo}
+                alt="User avatar"
+                className="h-full w-full object-cover"
+              />
+            )}
           </Avatar>
         </div>
       </div>
     </header>
-  )
+  );
 }

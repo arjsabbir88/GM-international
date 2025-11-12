@@ -11,27 +11,32 @@ interface SidebarProps {
   onToggle: () => void;
 }
 
-export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
+export default function UserSidebar({ isOpen, onToggle }: SidebarProps) {
   const [activeItem, setActiveItem] = useState("Dashboard");
 
   const menuItems = [
     {
       label: "Dashboard",
       icon: LayoutDashboard,
-      href: "/dashboard/scholarship/admin",
+      href: "/dashboard/scholarship/user",
     },
     {
-      label: "Manage Applications",
+      label: "Application Status",
       icon: FileText,
       href: "/dashboard/scholarship/admin/manage-student-application",
     },
     {
-      label: "Manage Packages",
+      label: "Edit Application",
       icon: Package,
       href: "/dashboard/scholarship/admin/manage-student-packages",
     },
     {
-      label: "Manage University",
+      label: "Change mail",
+      icon: Building2,
+      href: "/dashboard/scholarship/admin/manage-student-university",
+    },
+    {
+      label: "Change Password",
       icon: Building2,
       href: "/dashboard/scholarship/admin/manage-student-university",
     },

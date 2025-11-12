@@ -28,6 +28,7 @@ import {
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
 import { UserDropdown } from "./components/DropdownMenuOnNavbar";
+import useUserRole from "@/app/useContext/useUserRole";
 
 
 const components: { title: string; href: string; description: string }[] = [
@@ -68,12 +69,25 @@ const components: { title: string; href: string; description: string }[] = [
   },
 ];
 
+type UserRole = {
+  userRole: string;
+  loading: boolean;
+}
+
 export function NavBar() {
   // const isMobile = useIsMobile()
 
   const { data: session, status } = useSession();
+  
+  const result:UserRole = useUserRole();
 
-  // console.log(sassion?.user?.email, status);
+  const { userRole, loading } = result;
+
+  // console.log(userRole,loading, session?.user?.email)
+
+  if(loading){
+    return <div>Loading...</div>
+  }
 
   return (
     <NavigationMenu

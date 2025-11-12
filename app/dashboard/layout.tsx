@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Sidebar from "./scholarship/components/sidebar";
 import Header from "./scholarship/components/Header";
+import useUserRole from "../useContext/useUserRole";
+import UserSidebar from "./scholarship/user/components/user-sidebar";
 
 export default function DashboardLayout({
   children,
@@ -10,19 +12,54 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const { userRole, loading } = useUserRole();
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="flex min-h-screen overflow-auto">
       <div className="max-w-64 w-full">
-        <Sidebar
-          isOpen={sidebarOpen}
-          onToggle={() => setSidebarOpen(!sidebarOpen)}
-        />
+        {/* this sidebar for admin */}
+
+        {userRole === "admin" && (
+          <Sidebar
+            isOpen={sidebarOpen}
+            onToggle={() => setSidebarOpen(!sidebarOpen)}
+          />
+        )}
+
+        {/* this sidebar for user */}
+        {userRole === "user" && <UserSidebar isOpen={sidebarOpen}
+            onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+
       </div>
       <main className="flex-1 p-6">
-        <Header
-          onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
-          sidebarOpen={sidebarOpen}
-        />
+        
+        {/* this is admin header */}
+        {
+          userRole === "admin" && (
+            
+            <Header
+              onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
+              sidebarOpen={sidebarOpen}
+            />)
+        }
+
+        {/* this is user header */}
+        {
+          userRole === "user" && (
+            <Header
+              onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
+              sidebarOpen={sidebarOpen}
+            />)
+        }
+
+
+
+
         {children}
       </main>
     </div>
