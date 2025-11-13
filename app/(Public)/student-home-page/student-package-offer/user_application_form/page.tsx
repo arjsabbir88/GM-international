@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import Dropdown from "./components/dropDown";
 
 interface FormData {
+  applicantId: string;
   country: string;
   university: string;
   firstName: string;
@@ -33,7 +34,10 @@ export default function AdmissionForm() {
 
   //   console.log("find the id", params.id);
 
+  // console.log("typeof(id)", typeof(id))
+
   const [formData, setFormData] = useState<FormData>({
+    applicantId: '',
     country: "All",
     university: "University name",
     firstName: "",
@@ -64,6 +68,7 @@ export default function AdmissionForm() {
 
   const handleClear = () => {
     setFormData({
+      applicantId: '',
       country: "All",
       university: "University name",
       firstName: "",
@@ -175,6 +180,7 @@ export default function AdmissionForm() {
     }
 
     setFormData({
+      applicantId: '',
       country: "All",
       university: "University name",
       firstName: "",

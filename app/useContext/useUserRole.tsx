@@ -10,14 +10,16 @@ const useUserRole = () => {
 
    useEffect(() => {
 
+    if(!session) return;
+
     if (status === "authenticated" && session?.user?.email) {
       setLoading(true);
       const fetchUserRole = async () => {
 
         try {
 
-          const res = await fetch(`users/user-role?email=${session?.user?.email}`);
-          if (!res.ok) throw new Error("Failed to fetch user role");
+          const res = await fetch(`http://localhost:5000/users/user-role?email=${session?.user?.email}`);
+          // if (!res.ok) throw new Error("Failed to fetch user role");
           const data = await res.json();
           setUserRole(data.userRole); 
 

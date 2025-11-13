@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { LayoutDashboard, FileText, Package, Building2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 interface SidebarProps {
@@ -13,6 +12,7 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
   const [activeItem, setActiveItem] = useState("Dashboard");
+
 
   const menuItems = [
     {

@@ -3,8 +3,11 @@
 import Link from "next/link";
 import { LayoutDashboard, FileText, Package, Building2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { signOut, useSession } from "next-auth/react";
+import { useUser } from "@/app/useContext/useUserData";
+
 
 interface SidebarProps {
   isOpen: boolean;
@@ -13,6 +16,36 @@ interface SidebarProps {
 
 export default function UserSidebar({ isOpen, onToggle }: SidebarProps) {
   const [activeItem, setActiveItem] = useState("Dashboard");
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  const { user } = useUser();
+
+  console.log("find the loggeding user", user);
+  const { name, email, photo } = user;
+
+  if (!user) {
+    return <p>loading....</p>;
+  }
+
+  const handleOAuthSignOut = () => {
+      setIsLoading(true);
+  
+      signOut()
+        .then((result) => {
+          if (result) {
+            console.log("faild to sign out", result);
+          }
+          console.log("logout successfully");
+          router.push("/auth/signin");
+        })
+        .catch((err) => {
+          console.log("Find the error", err);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    };
 
   const menuItems = [
     {
@@ -23,24 +56,28 @@ export default function UserSidebar({ isOpen, onToggle }: SidebarProps) {
     {
       label: "Application Status",
       icon: FileText,
-      href: "/dashboard/scholarship/admin/manage-student-application",
+      href: "/dashboard/scholarship/user/application-status",
     },
     {
       label: "Edit Application",
       icon: Package,
-      href: "/dashboard/scholarship/admin/manage-student-packages",
+      href: "/dashboard/scholarship/user/edit-application",
     },
     {
       label: "Change mail",
       icon: Building2,
-      href: "/dashboard/scholarship/admin/manage-student-university",
+      href: "/dashboard/scholarship/user/change-mail",
     },
     {
       label: "Change Password",
       icon: Building2,
-      href: "/dashboard/scholarship/admin/manage-student-university",
+      href: "/dashboard/scholarship/user/change-password",
     },
   ];
+
+  if(isLoading){
+    return <p>loading.....</p>
+  }
 
   return (
     <>
@@ -83,31 +120,54 @@ export default function UserSidebar({ isOpen, onToggle }: SidebarProps) {
             <X className="w-5 h-5 text-sidebar-foreground" />
           </button>
         </div>
+        <div className="flex flex-col flex-1">
+          {/* Navigation */}
+          <nav className="flex-1 px-4 py-6 space-y-1">
+            {menuItems.map((item) => {
+              const isActive = activeItem === item.label;
+              const Icon = item.icon;
 
-        {/* Navigation */}
-        <nav className="flex-1 px-4 py-6 space-y-1">
-          {menuItems.map((item) => {
-            const isActive = activeItem === item.label;
-            const Icon = item.icon;
-
-            return (
-              <Link
-                key={item.label}
-                href={item.href}
-                onClick={() => setActiveItem(item.label)}
-                className={cn(
-                  "flex items-center gap-3 px-4 py-2 rounded-lg transition-colors",
-                  isActive
-                    ? "bg-red-500 text-white"
-                    : "text-sidebar-foreground hover:bg-red-500"
-                )}
-              >
-                <Icon className="w-5 h-5" />
-                <span className="text-sm font-medium">{item.label}</span>
-              </Link>
-            );
-          })}
-        </nav>
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  onClick={() => setActiveItem(item.label)}
+                  className={cn(
+                    "flex items-center gap-3 px-4 py-2 rounded-lg transition-colors",
+                    isActive
+                      ? "bg-red-500 text-white"
+                      : "text-sidebar-foreground hover:bg-red-500"
+                  )}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span className="text-sm font-medium">{item.label}</span>
+                </Link>
+              );
+            })}
+          </nav>
+          <div className="w-48 mx-auto mb-10 space-y-3">
+            <div className="flex items-center gap-3 border-b border-gray-400 pb-4">
+              <img
+                src={`${photo}`}
+                alt="User"
+                className="h-8 w-8 rounded-full border-2 border-red-500"
+              />
+              <div className="min-w-0 text-black">
+                <p className="truncate text-lg font-semibold">{name}</p>
+                <p className="truncate text-xs text-muted-foreground">
+                  {email}
+                </p>
+              </div>
+            </div>
+            <div className="w-full ">
+              <Link href="/profile"
+              className="flex items-center justify-center border-2 bg-red-300 border-gray-300 gap-3 px-4 py-2 rounded-lg transition-colors hover:bg-red-500 hover:text-white font-bold">Profile</Link>
+              <button 
+              onClick={handleOAuthSignOut}
+              className="w-full flex items-center justify-center border-2 my-2 border-red-500 gap-3 px-4 py-2 rounded-lg transition-colors hover:bg-red-500 hover:text-white font-bold">Logout</button>
+            </div>
+          </div>
+        </div>
       </aside>
     </>
   );

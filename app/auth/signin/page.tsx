@@ -30,6 +30,7 @@ export default function LoginPage() {
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     setIsLoading(true);
+    console.log("credentials data",data)
     signIn("credentials", {
       redirect: false,
       email: data.userName,
@@ -45,6 +46,8 @@ export default function LoginPage() {
       .catch(() => setError("An unexpected error occurred"))
       .finally(() => setIsLoading(false));
   };
+
+  console.log(error)
 
   const handleOAuthSignIn = (provider: "google" | "facebook") => {
     setIsLoading(true);

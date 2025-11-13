@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { Upload, Loader2 } from "lucide-react";
-import Dropdown from "./components/dropDown";
 import { useParams, useRouter } from "next/navigation";
-import { spawn } from "child_process";
 import Swal from "sweetalert2";
+import Dropdown from "../components/dropDown";
 
 interface FormData {
   applicantId: string;
@@ -23,6 +22,8 @@ interface FormData {
   email: string;
   category: string;
   paymentMethod: string;
+  paymentStatus: string;
+  applicationStatus: string;
 }
 
 interface ImgFormData {
@@ -34,10 +35,11 @@ export default function AdmissionForm() {
   const router = useRouter();
 
   //   console.log("find the id", params.id);
-  console.log("idtype",typeof(id))
+
+  console.log("typeof(id)", typeof id);
 
   const [formData, setFormData] = useState<FormData>({
-    applicantId: '',
+    applicantId: `${id}`,
     country: "All",
     university: "University name",
     firstName: "",
@@ -52,6 +54,8 @@ export default function AdmissionForm() {
     email: "",
     category: "Full",
     paymentMethod: "Bkash",
+    paymentStatus: "Pending",
+    applicationStatus: "Pending",
   });
 
   const [isUploading, setIsUploading] = useState(false);
@@ -68,7 +72,7 @@ export default function AdmissionForm() {
 
   const handleClear = () => {
     setFormData({
-      applicantId: '',
+      applicantId: `${id}`,
       country: "All",
       university: "University name",
       firstName: "",
@@ -83,6 +87,8 @@ export default function AdmissionForm() {
       email: "",
       category: "Full",
       paymentMethod: "Bkash",
+      paymentStatus: "Pending",
+      applicationStatus: "Pending",
     });
   };
 
@@ -180,7 +186,7 @@ export default function AdmissionForm() {
     }
 
     setFormData({
-      applicantId: '',
+      applicantId: `${id}`,
       country: "All",
       university: "University name",
       firstName: "",
@@ -193,11 +199,13 @@ export default function AdmissionForm() {
       courseName: "BBA",
       coverage: "Tuition",
       email: "",
-      category: "Full", 
+      category: "Full",
       paymentMethod: "Bkash",
+      paymentStatus: "Pending",
+      applicationStatus: "Pending",
     });
-    setUploaded(false)
-    router.push(`/student-home-page/student-package-offer/${id}`)
+    setUploaded(false);
+    router.push(`/student-home-page/student-package-offer/${id}`);
   };
 
   return (

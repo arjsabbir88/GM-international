@@ -9,7 +9,7 @@ interface StatusBadgeProps {
 
 export function StatusBadge({ type, status }: StatusBadgeProps) {
   const getPaymentBadgeStyles = () => {
-    switch (status.toLowerCase()) {
+    switch (status?.toLowerCase()) {
       case "paid":
         return {
           bg: "bg-emerald-100 dark:bg-emerald-900/30",
@@ -32,7 +32,7 @@ export function StatusBadge({ type, status }: StatusBadgeProps) {
   }
 
   const getApplicationBadgeStyles = () => {
-    switch (status.toLowerCase()) {
+    switch (status?.toLowerCase()) {
       case "on-progress":
         return {
           bg: "bg-emerald-100 dark:bg-emerald-900/30",

@@ -1,9 +1,11 @@
 "use client";
 
+import { useUser } from "@/app/useContext/useUserData";
 import { auth } from "@/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Bell, Menu } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useEffect } from "react";
 
 interface HeaderProps {
   onMenuToggle: () => void;
@@ -14,11 +16,26 @@ export default function Header({ onMenuToggle, sidebarOpen }: HeaderProps) {
   // const session = useSess
 
   const { data: session, status } = useSession();
+  const {setUser} = useUser();
 
   const email = session?.user?.email;
   const name = session?.user?.name;
 
   const photo = session?.user?.image;
+
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      console.log("user comming")
+      const loggedInUser = {
+      name,
+      email,
+      photo: photo || "",
+    };
+    // console.log("loggedInUser", loggedInUser);
+      setUser(loggedInUser);
+    }
+  }, [status, setUser,session]);
 
   return (
     <header className="bg-background border-b border-border px-6 py-4 flex items-center justify-between">
@@ -58,6 +75,7 @@ export default function Header({ onMenuToggle, sidebarOpen }: HeaderProps) {
               />
             )}
           </Avatar>
+
         </div>
       </div>
     </header>

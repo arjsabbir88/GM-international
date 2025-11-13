@@ -4,150 +4,11 @@ import { useState, useMemo, useEffect } from "react"
 import { StatusBadge } from "./status-badge"
 import { ApplicationRow } from "./applicationTableRow"
 import { useSession } from "next-auth/react"
+import Link from "next/link"
+import EditUserApplication from "./editUserApplication"
 
-// Sample data based on your MongoDB format
-// const sampleApplications = [
-//   {
-//     _id: "69146db1849235d1c89522b1",
-//     country: "Australia",
-//     university: "Harvard",
-//     firstName: "Mr",
-//     lastName: "Sabbir",
-//     phoneNumber: "+8801817247388",
-//     gender: "Male",
-//     dateOfBirth: "03/11/2003",
-//     admissionSemester: "Spring",
-//     language: "English",
-//     courseName: "Engineering",
-//     coverage: "Full Scholarship",
-//     email: "dev.tariqulislam88@gmail.com",
-//     category: "Partial",
-//     paymentMethod: "Bkash",
-//     imgUrl: "https://res.cloudinary.com/dqyfwfeed/image/upload/v1762595881/n97sjxakhf7dulqqvomq.jpg",
-//     status: "pending",
-//     degree: "Bachelor of Science",
-//     applicantId: "EX.1325456",
-//     dateApplied: "12.12.2025",
-//     paymentStatus: "Due",
-//   },
-//   {
-//     _id: "69146db1849235d1c89522b2",
-//     country: "USA",
-//     university: "MIT",
-//     firstName: "John",
-//     lastName: "Doe",
-//     phoneNumber: "+1234567890",
-//     gender: "Male",
-//     dateOfBirth: "15/05/2001",
-//     admissionSemester: "Fall",
-//     language: "English",
-//     courseName: "Computer Science",
-//     coverage: "Full Scholarship",
-//     email: "john.doe@gmail.com",
-//     category: "Full",
-//     paymentMethod: "Credit Card",
-//     imgUrl: "https://res.cloudinary.com/dqyfwfeed/image/upload/v1762595881/n97sjxakhf7dulqqvomq.jpg",
-//     status: "on-progress",
-//     degree: "Bachelor of Engineering",
-//     applicantId: "EX.1325457",
-//     dateApplied: "11.12.2025",
-//     paymentStatus: "Paid",
-//   },
-//   {
-//     _id: "69146db1849235d1c89522b3",
-//     country: "Canada",
-//     university: "Oxford",
-//     firstName: "Sarah",
-//     lastName: "Smith",
-//     phoneNumber: "+1987654321",
-//     gender: "Female",
-//     dateOfBirth: "22/08/2002",
-//     admissionSemester: "Spring",
-//     language: "English",
-//     courseName: "Law",
-//     coverage: "Partial Scholarship",
-//     email: "sarah.smith@gmail.com",
-//     category: "Partial",
-//     paymentMethod: "Bank Transfer",
-//     imgUrl: "https://res.cloudinary.com/dqyfwfeed/image/upload/v1762595881/n97sjxakhf7dulqqvomq.jpg",
-//     status: "cancelled",
-//     degree: "Bachelor of Law",
-//     applicantId: "EX.1325458",
-//     dateApplied: "10.12.2025",
-//     paymentStatus: "Due",
-//   },
-//   {
-//     _id: "69146db1849235d1c89522b4",
-//     country: "UK",
-//     university: "Cambridge",
-//     firstName: "Emma",
-//     lastName: "Wilson",
-//     phoneNumber: "+441234567890",
-//     gender: "Female",
-//     dateOfBirth: "30/03/2003",
-//     admissionSemester: "Fall",
-//     language: "English",
-//     courseName: "Medicine",
-//     coverage: "Full Scholarship",
-//     email: "emma.wilson@gmail.com",
-//     category: "Full",
-//     paymentMethod: "Paypal",
-//     imgUrl: "https://res.cloudinary.com/dqyfwfeed/image/upload/v1762595881/n97sjxakhf7dulqqvomq.jpg",
-//     status: "on-progress",
-//     degree: "Bachelor of Medicine",
-//     applicantId: "EX.1325459",
-//     dateApplied: "09.12.2025",
-//     paymentStatus: "Paid",
-//   },
-//   {
-//     _id: "69146db1849235d1c89522b5",
-//     country: "Australia",
-//     university: "Stanford",
-//     firstName: "Michael",
-//     lastName: "Johnson",
-//     phoneNumber: "+61234567890",
-//     gender: "Male",
-//     dateOfBirth: "12/07/2002",
-//     admissionSemester: "Spring",
-//     language: "English",
-//     courseName: "Business",
-//     coverage: "Partial Scholarship",
-//     email: "michael.johnson@gmail.com",
-//     category: "Partial",
-//     paymentMethod: "Bkash",
-//     imgUrl: "https://res.cloudinary.com/dqyfwfeed/image/upload/v1762595881/n97sjxakhf7dulqqvomq.jpg",
-//     status: "cancelled",
-//     degree: "Bachelor of Business",
-//     applicantId: "EX.1325460",
-//     dateApplied: "08.12.2025",
-//     paymentStatus: "Due",
-//   },
-//   {
-//     _id: "69146db1849235d1c89522b6",
-//     country: "Canada",
-//     university: "Yale",
-//     firstName: "Lisa",
-//     lastName: "Brown",
-//     phoneNumber: "+14165551234",
-//     gender: "Female",
-//     dateOfBirth: "18/09/2001",
-//     admissionSemester: "Fall",
-//     language: "English",
-//     courseName: "Engineering",
-//     coverage: "Full Scholarship",
-//     email: "lisa.brown@gmail.com",
-//     category: "Full",
-//     paymentMethod: "Credit Card",
-//     imgUrl: "https://res.cloudinary.com/dqyfwfeed/image/upload/v1762595881/n97sjxakhf7dulqqvomq.jpg",
-//     status: "on-progress",
-//     degree: "Bachelor of Engineering",
-//     applicantId: "EX.1325461",
-//     dateApplied: "07.12.2025",
-//     paymentStatus: "Paid",
-//   },
-// ]
-interface FormData {
-  _id?: string;
+interface UserApplicationFormData {
+  _id: string;
   country: string;
   university: string;
   firstName: string;
@@ -166,15 +27,18 @@ interface FormData {
   applicantId: string;
   dateApplied: string;
   paymentStatus: string;
-  status: string;
+  applicationStatus: string;
 }
 
-export function UserApplicationsTable() {
+export function UserApplicationsTable({ edit }: { edit?: boolean }) {
     const {data: session, status} = useSession()
-  const [filteredApplications,setFilteredApplications] = useState<FormData[]>([])
+  const [filteredApplications,setFilteredApplications] = useState<UserApplicationFormData[]>([])
   const [loading, setLoading] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
  
    const email = session?.user?.email;
+   console.log(email)
 
   useEffect(()=>{
     // Fetch applications from API and set to state
@@ -199,7 +63,7 @@ export function UserApplicationsTable() {
   },[email, setFilteredApplications])
 
   
-
+  console.log(filteredApplications);
 
   if(loading){
     return <div>Loading...</div>
@@ -209,41 +73,66 @@ export function UserApplicationsTable() {
       {/* Desktop Table View */}
       <div className="hidden md:block overflow-x-auto rounded-xl shadow-lg border border-slate-200 dark:border-slate-700">
         <table className="w-full">
-          <thead>
-            <tr className="bg-linear-to-r from-slate-900 to-slate-800 dark:from-slate-800 dark:to-slate-900">
-              <th className="px-6 py-4 text-left text-sm font-semibold text-white">University Name</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-white">Program</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-white">Degree</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-white">Applicant Id.</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-white">Date Applied</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-white">Payment Status</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-white">Application Status</th>
+          <thead className="border-b border-gray-200 dark:border-slate-700">
+            <tr className="dark:from-slate-800 dark:to-slate-900">
+              <th className="px-6 py-4 text-left text-sm font-semibold ">University Name</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold ">Program</th>
+              {/* <th className="px-6 py-4 text-left text-sm font-semibold ">Degree</th> */}
+              <th className="px-6 py-4 text-left text-sm font-semibold ">Coverage</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold ">Applicant Id.</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold ">Date Applied</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold ">Payment Status</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold ">Application Status</th>
+              {
+                !edit && <th className="px-6 py-4 text-left text-sm font-semibold">View Details</th>
+              }
+              {
+                edit && <th className="px-6 py-4 text-left text-sm font-semibold ">Edit</th>
+              }
             </tr>
           </thead>
           <tbody className="divide-y divide-red-200 dark:divide-slate-700 py-4">
             {filteredApplications.map((application, index) => (
               <tr
                 key={application._id}
-                className="hover:bg-red-200 dark:hover:bg-red-800 transition-colors duration-200 animate-fade-in py-4"
+                className="hover:bg-red-300 dark:hover:bg-red-800 transition-colors duration-200 animate-fade-in py-4"
                 style={{ animationDelay: `${index * 50}ms` }}
               >
                 <td className="px-6 py-4 text-sm text-slate-900 dark:text-slate-100 font-medium">
                   {application.university}
                 </td>
                 <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">{application.courseName}</td>
-                <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">{application.degree}</td>
+                {/* <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">{application.degree}</td> */}
+                <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">{application.coverage}</td>
                 <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">{application.applicantId}</td>
-                <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">{application.dateApplied}</td>
+                <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400"> {new Date(parseInt(application._id.substring(0, 8), 16) * 1000).toLocaleDateString()}</td>
                 <td className="px-6 py-4">
                   <StatusBadge type="payment" status={application.paymentStatus} />
                 </td>
                 <td className="px-6 py-4">
-                  <StatusBadge type="application" status={application.status} />
+                  <StatusBadge type="application" status={application.applicationStatus} />
                 </td>
+                {
+                  !edit && <td className="px-6 py-4 text-sm text-blue-500 dark:text-slate-400 hover:underline hover:cursor-pointer hover:link"> 
+                  <Link href={`/student-home-page/student-package-offer/${application.applicantId}`}>
+                  View Details
+                </Link>
+                </td>
+                }
+                {
+                  edit && <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
+                    <button
+                      onClick={() => (setSelectedId(application._id), setIsOpen(true))}
+
+                    className="px-3 py-2 border border-gray-300 bg-red-400 rounded-lg text-black hover:bg-red-400 hover:text-white ">Edit</button>
+                  </td>
+                }
               </tr>
             ))}
           </tbody>
         </table>
+
+        <EditUserApplication isOpen={isOpen} onClose={() => setIsOpen(false)} filteredApplications={filteredApplications} selectedId={selectedId} />
       </div>
 
       {/* Mobile Card View */}
