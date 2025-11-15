@@ -160,7 +160,7 @@ export default function UserSidebar({ isOpen, onToggle }: SidebarProps) {
               </div>
             </div>
             <div className="w-full ">
-              <Link href="/profile"
+              <Link href={`/profile?email=${email}`}
               className="flex items-center justify-center border-2 bg-red-300 border-gray-300 gap-3 px-4 py-2 rounded-lg transition-colors hover:bg-red-500 hover:text-white font-bold">Profile</Link>
               <button 
               onClick={handleOAuthSignOut}
