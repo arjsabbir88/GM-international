@@ -12,9 +12,9 @@ const Visa = () => {
 
         <VisaEnrollment/>
         </div>
-        <div>
+        {/* <div>
             <VisaFlow/>
-        </div>
+        </div> */}
         {/* <div>
             <VisaProcessFlow/>
         </div> */}

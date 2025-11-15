@@ -48,7 +48,8 @@ const FlowChartNode: React.FC<FlowChartNodeProps> = ({ data }) => {
               <div className="absolute inset-0 bg-linear-to-br from-blue-500 to-red-500 rounded-lg blur opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
               <div className="relative bg-linear-to-br from-blue-100 to-red-100 dark:from-blue-900/30 dark:to-red-900/30 rounded-lg p-3 md:p-4">
                 {/* <Icon className="w-6 h-6 md:w-8 md:h-8 text-red-500 group-hover:scale-110 transition-transform duration-300" /> */}
-                <span className="text-xl text-white">{data.icon}</span>
+                <img src={data.icon} alt="icon" className="text-2xl w-20"/>
+                {/* <span className="text-xl text-white">{data.icon}</span> */}
               </div>
             </div>
           </div>
