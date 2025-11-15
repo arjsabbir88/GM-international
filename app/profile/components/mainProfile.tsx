@@ -24,13 +24,41 @@ interface UserProfileData {
 const MainProfile = ({ userProfleData }: UserProfileData) => {
   const [user, setUser] = useState(userProfleData);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-
-  const handleProfileUpdate = (updatedData: any) => {
+  
+  const handleProfileUpdate =async (updatedData: any) => {
+      console.log("the user _id",user._id)
     setUser((prevUser) => ({
       ...prevUser,
       ...updatedData,
     }));
-    setIsEditModalOpen(false);
+
+
+    try {
+    const res = await fetch(`http://localhost:5000/user/updated-profile/${user._id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedData),
+    });
+
+    const result = await res.json();
+
+    if (result.success) {
+      // update local state
+      setUser((prev) => ({ ...prev, ...result.data }));
+
+      alert("Profile updated successfully!");
+      setIsEditModalOpen(false);
+    } else {
+      alert(result.message);
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Something went wrong!");
+  }
+
+
+    // console.log(updatedData)
+    // setIsEditModalOpen(false);
   };
 
   return (

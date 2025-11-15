@@ -1,8 +1,9 @@
-'use client';
+"use client";
 
-import { useState, useRef } from 'react';
-import { X, Upload, Eye, EyeOff } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useState, useRef } from "react";
+import { X, Upload, Eye, EyeOff } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Swal from "sweetalert2";
 
 interface User {
   _id: string;
@@ -21,13 +22,18 @@ interface EditProfileModalProps {
   onUpdate: (data: Partial<User>) => void;
 }
 
-export function EditProfileModal({ isOpen, user, onClose, onUpdate }: EditProfileModalProps) {
+export function EditProfileModal({
+  isOpen,
+  user,
+  onClose,
+  onUpdate,
+}: EditProfileModalProps) {
   const [formData, setFormData] = useState({
     username: user.username,
     email: user.email,
     phone: user.phone,
-    password: '',
-    confirmPassword: '',
+    password: "",
+    confirmPassword: "",
     avatar: user.avatar,
   });
 
@@ -45,36 +51,59 @@ export function EditProfileModal({ isOpen, user, onClose, onUpdate }: EditProfil
     }));
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsLoading(true);
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const result = reader.result as string;
-        setPreviewImage(result);
-        setFormData((prev) => ({
-          ...prev,
-          avatar: result,
-        }));
-      };
-      reader.readAsDataURL(file);
+
+    if (!file) return;
+
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", "pcakge_img_uploade");
+    data.append("cloud_name", "dqyfwfeed");
+
+    try {   
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/dqyfwfeed/image/upload",
+        {
+          method: "POST",
+          body: data,
+        }
+      );
+
+      const result = await res.json();
+
+      console.log(result);
+
+      if (!result.secure_url) {
+        throw new Error("Image upload failed");
+      }
+
+      setPreviewImage(result.secure_url);
+      setFormData((prev) => ({
+        ...prev,
+        avatar: result.secure_url,
+      }));
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }finally{
+        setIsLoading(false);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match');
-      return;
-    }
+
+    // if (formData.password !== formData.confirmPassword) {
+    //   alert("Passwords do not match");
+    //   return;
+    // }
 
     setIsLoading(true);
-    
+
     try {
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      
+
       const updateData: Partial<User> = {
         username: formData.username,
         email: formData.email,
@@ -82,17 +111,40 @@ export function EditProfileModal({ isOpen, user, onClose, onUpdate }: EditProfil
         avatar: formData.avatar,
       };
 
-      if (formData.password) {
-        updateData.password = formData.password;
-      }
+      //   if (formData.password) {
+      //     updateData.password = formData.password;
+      //   }
 
-      onUpdate(updateData);
+      const res = await fetch(
+        `http://localhost:5000/user/updated-profile/${user._id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updateData),
+        }
+      );
+
+      const result = await res.json();
+
+      if (result.success) {
+        Swal.fire({
+          title: "User data updated successfully",
+          icon: "success",
+          draggable: false,
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
   if (!isOpen) return null;
+
+  console.log(user);
+
+//   if(isLoading) return <p>loading.....</p>
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
@@ -114,7 +166,7 @@ export function EditProfileModal({ isOpen, user, onClose, onUpdate }: EditProfil
           <div className="flex flex-col items-center gap-4">
             <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-red-500 shadow-lg">
               <img
-                src={previewImage || formData.avatar || '/placeholder.svg'}
+                src={previewImage || formData.avatar || "/placeholder.svg"}
                 alt="Profile preview"
                 className="w-full h-full object-cover"
               />
@@ -184,13 +236,13 @@ export function EditProfileModal({ isOpen, user, onClose, onUpdate }: EditProfil
             </div>
 
             {/* Password */}
-            <div>
+            {/* <div>
               <label className="block text-sm font-semibold text-foreground mb-2">
                 New Password (Optional)
               </label>
               <div className="relative">
                 <input
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
@@ -202,20 +254,24 @@ export function EditProfileModal({ isOpen, user, onClose, onUpdate }: EditProfil
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                 >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
                 </button>
               </div>
-            </div>
+            </div> */}
 
             {/* Confirm Password */}
-            {formData.password && (
+            {/* {formData.password && (
               <div>
                 <label className="block text-sm font-semibold text-foreground mb-2">
                   Confirm Password
                 </label>
                 <div className="relative">
                   <input
-                    type={showConfirmPassword ? 'text' : 'password'}
+                    type={showConfirmPassword ? "text" : "password"}
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
@@ -227,11 +283,15 @@ export function EditProfileModal({ isOpen, user, onClose, onUpdate }: EditProfil
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                   >
-                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showConfirmPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
                   </button>
                 </div>
               </div>
-            )}
+            )} */}
           </div>
 
           {/* Action Buttons */}
@@ -248,7 +308,7 @@ export function EditProfileModal({ isOpen, user, onClose, onUpdate }: EditProfil
               disabled={isLoading}
               className="flex-1 px-4 py-2 bg-linear-to-r from-red-600 to-red-500 text-white rounded-lg hover:from-red-700 hover:to-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-semibold"
             >
-              {isLoading ? 'Saving...' : 'Save Changes'}
+              {isLoading ? "Saving..." : "Save Changes"}
             </button>
           </div>
         </form>

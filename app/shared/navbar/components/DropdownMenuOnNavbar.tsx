@@ -172,11 +172,13 @@ export function UserDropdown({ email, photo, name }: UserDropdownProps) {
 
         {/* Menu Items */}
         <div className="py-1 ">
-          <MenuItemWithIcon
-            icon={User}
-            label="Profile"
-            onClick={() => handleMenuItemClick("Profile")}
-          />
+          <Link href={`/profile?email=${email}`}>
+            <MenuItemWithIcon
+              icon={User}
+              label="Profile"
+              onClick={() => handleMenuItemClick("Profile")}
+            />
+          </Link>
           {userRole === "admin" ? (
             <Link href="/dashboard/scholarship/admin">
               <MenuItemWithIcon
