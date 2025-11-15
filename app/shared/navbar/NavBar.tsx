@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   CircleCheckIcon,
@@ -21,12 +21,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import HotlineButton from "./components/hotlineButton";
 import { useSession } from "next-auth/react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { DropdownMenu, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
-import {
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
+
 import { UserDropdown } from "./components/DropdownMenuOnNavbar";
 import useUserRole from "@/app/useContext/useUserRole";
 
@@ -74,16 +69,41 @@ type UserRole = {
   loading: boolean;
 }
 
+type User = {
+  avatar : string;
+}
+
 export function NavBar() {
   // const isMobile = useIsMobile()
 
   const { data: session, status } = useSession();
+  const [userData, setUserData] = useState<User | undefined>();
+  console.log("session on navbar",session);
   
   const result:UserRole = useUserRole();
 
   const { userRole, loading } = result;
 
   // console.log(userRole,loading, session?.user?.email)
+
+  useEffect(()=>{
+    const userData = async()=>{
+      const user = await fetch(`http://localhost:5000/user/get-avatar?email=${session?.user?.email}`,{
+        cache: "no-store"
+      })
+
+      const userUpdateData = await user.json();
+      setUserData(userUpdateData);
+    }
+
+    userData();
+  },[session])
+
+
+  const { avatar } = userData || {};
+
+  console.log("get the avatare",userData)
+
 
   if(loading){
     return <div>Loading...</div>
@@ -144,7 +164,7 @@ export function NavBar() {
         {/* social midea */}
         <NavigationMenuItem>
           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <Link href="/docs">Social media</Link>
+            <Link href="/visa">Visa Application</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
 
@@ -221,7 +241,7 @@ export function NavBar() {
         </NavigationMenuItem>
         {session?.user?.email ? (
           <NavigationMenuItem>
-            <UserDropdown email={session.user.email} photo={session.user.image || undefined} name={session.user.name || undefined}/>
+            <UserDropdown email={session.user.email} photo={avatar || undefined} name={session.user.name || undefined}/>
           </NavigationMenuItem>
         ) : (
           <NavigationMenuItem>

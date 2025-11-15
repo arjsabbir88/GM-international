@@ -19,14 +19,12 @@ interface EditProfileModalProps {
   isOpen: boolean;
   user: User;
   onClose: () => void;
-  onUpdate: (data: Partial<User>) => void;
 }
 
 export function EditProfileModal({
   isOpen,
   user,
   onClose,
-  onUpdate,
 }: EditProfileModalProps) {
   const [formData, setFormData] = useState({
     username: user.username,
@@ -137,6 +135,7 @@ export function EditProfileModal({
       }
     } finally {
       setIsLoading(false);
+      onClose();
     }
   };
 

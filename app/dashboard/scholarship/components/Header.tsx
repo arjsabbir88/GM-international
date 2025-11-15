@@ -10,9 +10,12 @@ import { useEffect } from "react";
 interface HeaderProps {
   onMenuToggle: () => void;
   sidebarOpen: boolean;
+  avatar: string | undefined;
 }
 
-export default function Header({ onMenuToggle, sidebarOpen }: HeaderProps) {
+export default function Header({ onMenuToggle, sidebarOpen,avatar }: HeaderProps) {
+
+
   // const session = useSess
 
   const { data: session, status } = useSession();
@@ -21,7 +24,6 @@ export default function Header({ onMenuToggle, sidebarOpen }: HeaderProps) {
   const email = session?.user?.email;
   const name = session?.user?.name;
 
-  const photo = session?.user?.image;
 
 
   useEffect(() => {
@@ -30,7 +32,6 @@ export default function Header({ onMenuToggle, sidebarOpen }: HeaderProps) {
       const loggedInUser = {
       name,
       email,
-      photo: photo || "",
     };
     // console.log("loggedInUser", loggedInUser);
       setUser(loggedInUser);
@@ -63,13 +64,13 @@ export default function Header({ onMenuToggle, sidebarOpen }: HeaderProps) {
             <p className="text-sm font-medium text-foreground">{name}</p>
           </div>
           <Avatar>
-            {!photo ? (
+            {!avatar ? (
               <span className="absolute inset-0 flex items-center justify-center bg-red-200 text-gray-600 font-semibold">
                 {name ? name.charAt(0).toUpperCase() : "U"}
               </span>
             ) : (
               <img
-                src={photo}
+                src={avatar}
                 alt="User avatar"
                 className="h-full w-full object-cover"
               />

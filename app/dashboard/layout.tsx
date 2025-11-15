@@ -1,11 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "./scholarship/components/sidebar";
 import Header from "./scholarship/components/Header";
 import useUserRole from "../useContext/useUserRole";
 import UserSidebar from "./scholarship/user/components/user-sidebar";
 import { UserProvider } from "../useContext/useUserData";
+import { useSession } from "next-auth/react";
+
+type UserAvatar = {
+  avatar: string | undefined;
+};
 
 export default function DashboardLayout({
   children,
@@ -13,8 +18,28 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [userAvatar, setUserAvatar] = useState<UserAvatar | undefined>();
 
   const { userRole, loading } = useUserRole();
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    const userData = async () => {
+      const user = await fetch(
+        `http://localhost:5000/user/get-avatar?email=${session?.user?.email}`,
+        {
+          cache: "no-store",
+        }
+      );
+
+      const userUpdateData = await user.json();
+      setUserAvatar(userUpdateData);
+    };
+
+    userData();
+  }, [session]);
+
+  const avatar = userAvatar?.avatar;
 
   if (loading) {
     return <div>Loading...</div>;
@@ -30,6 +55,7 @@ export default function DashboardLayout({
             <Sidebar
               isOpen={sidebarOpen}
               onToggle={() => setSidebarOpen(!sidebarOpen)}
+              avatar={avatar}
             />
           )}
 
@@ -38,6 +64,7 @@ export default function DashboardLayout({
             <UserSidebar
               isOpen={sidebarOpen}
               onToggle={() => setSidebarOpen(!sidebarOpen)}
+              avatar={avatar}
             />
           )}
         </div>
@@ -48,6 +75,7 @@ export default function DashboardLayout({
               <Header
                 onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
                 sidebarOpen={sidebarOpen}
+                avatar={avatar}
               />
             )}
 
@@ -56,6 +84,7 @@ export default function DashboardLayout({
               <Header
                 onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
                 sidebarOpen={sidebarOpen}
+                avatar={avatar}
               />
             )}
           </div>

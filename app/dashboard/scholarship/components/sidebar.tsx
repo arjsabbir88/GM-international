@@ -8,9 +8,10 @@ import { useState } from "react";
 interface SidebarProps {
   isOpen: boolean;
   onToggle: () => void;
+  avatar: string | undefined;
 }
 
-export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
+export default function Sidebar({ isOpen, onToggle, avatar }: SidebarProps) {
   const [activeItem, setActiveItem] = useState("Dashboard");
 
 

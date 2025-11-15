@@ -12,9 +12,10 @@ import { useUser } from "@/app/useContext/useUserData";
 interface SidebarProps {
   isOpen: boolean;
   onToggle: () => void;
+  avatar: string | undefined;
 }
 
-export default function UserSidebar({ isOpen, onToggle }: SidebarProps) {
+export default function UserSidebar({ isOpen, onToggle, avatar }: SidebarProps) {
   const [activeItem, setActiveItem] = useState("Dashboard");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -148,7 +149,7 @@ export default function UserSidebar({ isOpen, onToggle }: SidebarProps) {
           <div className="w-48 mx-auto mb-10 space-y-3">
             <div className="flex items-center gap-3 border-b border-gray-400 pb-4">
               <img
-                src={`${photo}`}
+                src={`${avatar}`}
                 alt="User"
                 className="h-8 w-8 rounded-full border-2 border-red-500"
               />
